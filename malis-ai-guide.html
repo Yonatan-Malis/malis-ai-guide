@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מליס AI — ספר כלים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — מליס AI v5
+   תואם malis-design-system.md גרסה 1.0
+   ═══════════════════════════════════════════ */
+:root {
+  /* טוקנים משותפים — זהים בכל הסביבות */
+  --terra:      #C4845A;   /* TERRA — אקסנט בלבד, אסור על כותרות */
+  --terra-l:    #F0DDD0;   /* TERRA_L */
+  --terra-pale: #FAF4EF;   /* שימוש פנימי לכלי */
+  --terra-mid:  #f0d8ca;
+  --ink:        #1A1714;   /* INK — כותרות בלבד */
+  --ink-soft:   #2A2520;   /* INK_SOFT */
+  --ink-mid:    #4a4540;   /* SECONDARY */
+  --ink-light:  #6B6355;   /* MUTED */
+  --off-white:  #F8F6F3;   /* OFF_W */
+  --grey:       #E8E4DE;   /* GREY */
+  --body:       #3A3530;   /* BODY */
+  /* צבעי כלים וממשקים — 6ב */
+  --warm-stone: #EAE5DD;   /* WARM_STONE — sidebar · כרטיסים */
+  --bg-warm:    #F5F1EC;   /* BG_WARM — רקע ראשי */
+  /* צבעי פלטפורמות AI */
+  --slate:      #6E8BA3;   /* dor */
+  --slate-pale: #E6F1FB;
+  --sage:       #7A9080;   /* anat */
+  --sage-pale:  #EAF3DE;
+  --sand:       #BDB5A4;
+  --sand-pale:  #F5F2ED;
+  --purple:     #7B5EA7;   /* Visual Scripting */
+  --purple-pale:#F0EBF8;
+  /* מערכת */
+  --border:     rgba(26,23,20,0.1);
+  --border-mid: rgba(26,23,20,0.18);
+  --bg:         #FDFBF9;
+  --bg-panel:   var(--bg-warm);
+  --radius:     8px;
+  --radius-lg:  12px;
+  --sans:       'Assistant','Arial Hebrew',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Assistant',sans-serif;background:var(--bg);color:var(--ink);direction:rtl;font-size:15px;line-height:1.5;}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{order:1;width:200px;background:var(--bg-panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
+.main{order:2;flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+/* ── SIDEBAR ── */
+/* לוגו — תמיד שתי שורות, מיושר ימין, לפי DS סעיף 5 */
+.sb-brand{
+  padding:14px 14px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:right;
+}
+.sb-logo-heb{
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+  line-height:1.3;
+  letter-spacing:0.01em;
+}
+.sb-logo-en{
+  font-size:10px;
+  font-weight:400;
+  color:var(--ink-light);
+  margin-top:2px;
+  letter-spacing:0.02em;
+  direction:ltr;
+  text-align:right;
+}
+/* eyebrow — לפי DS סעיף 5 */
+.eyebrow{
+  font-size:11px;
+  color:var(--terra);
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  font-weight:400;
+  direction:rtl;
+  text-align:right;
+}
+/* קו terra — לפי DS */
+.terra-line{
+  width:38px;
+  height:2px;
+  background:var(--terra);
+  margin:6px 0;
+  border-radius:1px;
+}
+.sb-home{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;font-weight:500;color:var(--terra);cursor:pointer;border-bottom:1px solid var(--border);margin-bottom:4px;transition:background .15s;}
+.sb-home:hover{background:var(--terra-pale);}
+.sb-home svg{width:15px;height:15px;flex-shrink:0;}
+.sb-sec{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);padding:10px 14px 4px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:13px;color:var(--ink-mid);cursor:pointer;transition:background .15s;position:relative;}
+.sb-item:hover{background:rgba(196,132,90,.06);}
+.sb-item.active{color:var(--terra);font-weight:500;background:var(--terra-pale);border-right:2px solid var(--terra);}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.65;}
+.sb-item.active svg{opacity:1;}
+.sb-sub{padding:5px 14px 5px 32px;font-size:12px;color:var(--ink-light);cursor:pointer;transition:color .15s;}
+.sb-sub:hover{color:var(--terra);}
+.sb-star{color:var(--terra);font-size:10px;margin-right:auto;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 24px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;}
+.topbar-title{font-size:14px;font-weight:500;color:var(--ink);}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-light);}
+.bc-sep{opacity:.4;}
+.bc-link{color:var(--terra);cursor:pointer;}
+.bc-link:hover{text-decoration:underline;}
+.bc-cur{color:var(--ink);}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:24px 28px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ═══ HOME PAGE ═══ */
+.home-greeting{font-size:22px;font-weight:300;color:var(--ink);margin-bottom:20px;}
+.home-greeting strong{font-weight:600;color:var(--terra);}
+
+.wizard-card{background:var(--warm-stone);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:24px;}
+.wiz-title{font-size:16px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.wiz-sub{font-size:12px;color:var(--ink-light);margin-bottom:16px;}
+.wiz-q-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:8px;}
+.wiz-opts{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.wiz-opt{padding:6px 14px;font-size:12px;border:1px solid var(--border-mid);border-radius:20px;cursor:pointer;color:var(--ink-mid);background:var(--bg);transition:all .15s;}
+.wiz-opt:hover,.wiz-opt.sel{background:var(--terra-pale);color:var(--terra);border-color:var(--terra);}
+.wiz-q2-wrap{display:none;}
+.wiz-result{display:none;background:var(--terra-pale);border:1px solid var(--terra);border-radius:var(--radius);padding:12px 16px;margin-top:4px;}
+.wiz-result.show{display:block;}
+.wiz-res-label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--terra);margin-bottom:10px;}
+.wiz-rec{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--terra-mid);}
+.wiz-rec:last-child{border-bottom:none;}
+.wiz-rec-info{}
+.wiz-rec-name{font-size:13px;font-weight:500;color:var(--ink);}
+.wiz-rec-desc{font-size:11px;color:var(--ink-mid);margin-top:1px;}
+.wiz-rec-btn{font-size:11px;color:var(--terra);cursor:pointer;padding:4px 11px;border:1px solid var(--terra);border-radius:20px;white-space:nowrap;transition:all .15s;flex-shrink:0;margin-right:8px;}
+.wiz-rec-btn:hover{background:var(--terra);color:#fff;}
+
+.home-section{margin-bottom:24px;}
+.hs-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.fav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.fav-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;background:var(--bg);transition:all .15s;}
+.fav-card:hover{border-color:var(--terra);background:var(--terra-pale);}
+.fav-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.fav-desc{font-size:11px;color:var(--ink-mid);line-height:1.4;}
+.fav-cat{font-size:10px;display:inline-block;margin-top:8px;padding:2px 8px;border-radius:20px;}
+
+.course-list{display:flex;flex-direction:column;gap:8px;}
+.course-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg);transition:all .15s;}
+.course-row:hover{border-color:var(--terra);background:var(--terra-pale);}
+.course-name{font-size:13px;font-weight:500;color:var(--ink);}
+.course-meta{font-size:11px;color:var(--ink-light);margin-top:2px;}
+.badge{font-size:10px;padding:2px 9px;border-radius:20px;background:var(--bg-panel);color:var(--ink-light);border:1px solid var(--border);}
+.badge.active{background:var(--sage-pale);color:var(--sage);border-color:var(--sage);}
+.badge.soon{background:var(--sand-pale);color:var(--sand);border-color:var(--sand);}
+
+/* ═══ TOOL PAGE ═══ */
+.tool-header{margin-bottom:18px;}
+.tool-header h2{font-size:22px;font-weight:500;color:var(--ink);margin-bottom:6px;}
+.tool-header p{font-size:13px;color:var(--ink-mid);line-height:1.6;max-width:540px;unicode-bidi:plaintext;}
+.meta-chips{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}
+.chip{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid;}
+.chip.price{background:var(--terra-pale);color:var(--terra);border-color:var(--terra);}
+.chip.str{background:var(--sage-pale);color:var(--sage);border-color:var(--sage);}
+.chip.weak{background:#FCEBEB;color:#A32D2D;border-color:#F09595;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+.cat-section{margin-bottom:22px;}
+.cat-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);direction:rtl;text-align:right;}
+
+/* ═══ SUB-TOOL CARD ═══ */
+.sub-tool-card{
+  background:linear-gradient(to left, var(--terra-pale) 0%, #FCF8F3 100%);
+  border:1px solid var(--terra-mid);
+  border-right:4px solid var(--terra);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin:18px 0 14px;
+  direction:rtl;
+  text-align:right;
+}
+.sub-tool-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.sub-tool-tag{font-size:10px;background:var(--terra);color:#fff;padding:2px 9px;border-radius:20px;font-weight:500;letter-spacing:.04em;}
+.sub-tool-name{font-size:16px;font-weight:600;color:var(--ink);flex:1;}
+.sub-tool-btn{font-size:12px;color:var(--terra);cursor:pointer;padding:4px 11px;border:1px solid var(--terra);border-radius:20px;background:#fff;white-space:nowrap;transition:all .15s;}
+.sub-tool-btn:hover{background:var(--terra);color:#fff;}
+.sub-tool-desc{font-size:13px;color:var(--ink-mid);line-height:1.6;direction:rtl;}
+
+.guide-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
+.guide-hdr{display:flex;align-items:center;gap:10px;padding:11px 15px;cursor:pointer;background:var(--bg);transition:background .15s;}
+.guide-hdr:hover{background:var(--bg-panel);}
+.g-num{font-size:10px;color:var(--ink-light);background:var(--bg-panel);padding:2px 7px;border-radius:20px;border:1px solid var(--border);}
+.g-name{font-size:13px;font-weight:500;color:var(--ink);flex:1;}
+.g-soon{font-size:10px;color:var(--sand);margin-right:auto;}
+.g-chev{width:14px;height:14px;color:var(--ink-light);transition:transform .2s;flex-shrink:0;}
+.g-chev.open{transform:rotate(180deg);}
+
+.guide-body{display:none;border-top:1px solid var(--border);}
+.guide-body.open{display:block;}
+.guide-intro{padding:13px 15px;background:var(--bg-panel);border-bottom:1px solid var(--border);}
+.guide-intro p{font-size:15px;color:var(--ink-mid);line-height:1.8;direction:rtl;text-align:right;}
+.steps-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-light);padding:12px 15px 7px;direction:rtl;}
+
+.step{display:grid;grid-template-columns:1fr 200px;gap:16px;padding:14px 15px;border-bottom:1px solid var(--border);align-items:start;}
+.step:last-child{border-bottom:none;}
+.step-n{font-size:11px;color:var(--ink-light);margin-bottom:4px;direction:rtl;}
+.step-t{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px;direction:rtl;text-align:right;}
+.step-d{font-size:14px;color:var(--ink-mid);line-height:1.7;direction:rtl;text-align:right;}
+.step-path{font-size:11px;color:var(--sage);background:var(--sage-pale);padding:3px 9px;border-radius:4px;margin-top:6px;display:block;direction:ltr;text-align:left;}
+.step-code{font-size:12px;background:var(--ink);color:#e8e0d0;padding:10px 12px;border-radius:6px;margin-top:8px;direction:ltr;text-align:left;line-height:1.6;font-family:monospace;white-space:pre-wrap;}
+.step-tip{font-size:13px;padding:8px 12px;border-radius:5px;margin-top:8px;line-height:1.6;direction:rtl;text-align:right;}
+.step-tip.terra{background:var(--terra-pale);color:var(--terra);border-right:3px solid var(--terra);}
+.step-tip.sl{background:var(--slate-pale);color:var(--slate);border-right:3px solid var(--slate);}
+.step-tip.sg{background:var(--sage-pale);color:var(--sage);border-right:3px solid var(--sage);}
+.step-seedoo{margin-top:9px;font-size:13px;direction:rtl;}
+.step-seedoo-row{display:flex;gap:7px;margin-top:5px;}
+.sd-label{font-size:11px;font-weight:600;color:var(--ink-light);white-space:nowrap;margin-top:1px;}
+.sd-text{color:var(--ink-mid);direction:rtl;}
+
+.step-img-box{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);cursor:zoom-in;}
+.step-img-box img{width:100%;height:auto;display:block;}
+.step-img-cap{font-size:11px;color:var(--ink-light);padding:5px 8px;background:var(--bg-panel);text-align:right;direction:rtl;}
+.step-img-ph{background:var(--bg-panel);height:90px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+.step-img-ph svg{width:20px;height:20px;opacity:.3;}
+.step-img-ph span{font-size:11px;color:var(--ink-light);}
+
+/* ═══ STATUS BADGE — מתודולוגיה בפיתוח ═══ */
+.guide-status{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 15px 12px;
+  padding:10px 14px;
+  background:#FFF4E1;
+  border:1px solid #E5B458;
+  border-right:3px solid #E5B458;
+  border-radius:var(--radius);
+  direction:rtl;
+  text-align:right;
+}
+.guide-status-icon{font-size:18px;flex-shrink:0;line-height:1.3;}
+.guide-status-text{font-size:13px;color:#7A5818;line-height:1.6;flex:1;}
+.guide-status-text strong{color:#5C4210;font-weight:600;}
+
+/* ═══ LEARN-FIRST BLOCK — לימוד לפני ביצוע ═══ */
+.learn-first{
+  margin:12px 15px;
+  padding:14px 16px;
+  background:linear-gradient(to left, var(--terra-pale) 0%, #FCF8F3 100%);
+  border:1px solid var(--terra-mid);
+  border-right:4px solid var(--terra);
+  border-radius:var(--radius);
+  direction:rtl;
+  text-align:right;
+}
+.learn-first-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--terra);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.learn-first-title::before{content:'🎓';font-size:16px;}
+.learn-first-body{
+  font-size:14px;
+  color:var(--ink-mid);
+  line-height:1.7;
+}
+.learn-first-stop{
+  margin-top:10px;
+  padding:6px 10px;
+  background:rgba(196,132,90,0.12);
+  border-radius:4px;
+  font-size:12px;
+  color:var(--terra);
+  font-weight:500;
+  direction:ltr;
+  text-align:left;
+  font-family:monospace;
+}
+
+/* ═══ PROMPT ACCORDION — פרומפט לדוגמה ═══ */
+.prompt-box{
+  margin-top:10px;
+  border:1px solid var(--border-mid);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--bg);
+}
+.prompt-hdr{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 13px;
+  cursor:pointer;
+  background:var(--bg-panel);
+  transition:background .15s;
+  direction:rtl;
+}
+.prompt-hdr:hover{background:var(--warm-stone);}
+.prompt-tag{
+  font-size:10px;
+  background:var(--ink);
+  color:#fff;
+  padding:2px 8px;
+  border-radius:20px;
+  font-weight:500;
+  letter-spacing:0.04em;
+}
+.prompt-title{
+  font-size:13px;
+  font-weight:500;
+  color:var(--ink);
+  flex:1;
+  direction:rtl;
+  text-align:right;
+}
+.prompt-chev{
+  width:14px;
+  height:14px;
+  color:var(--ink-light);
+  transition:transform .2s;
+  flex-shrink:0;
+}
+.prompt-chev.open{transform:rotate(180deg);}
+.prompt-body{
+  display:none;
+  border-top:1px solid var(--border);
+}
+.prompt-body.open{display:block;}
+.prompt-code{
+  font-size:12px;
+  background:#1f1c19;
+  color:#e8e0d0;
+  padding:14px 16px;
+  direction:ltr;
+  text-align:left;
+  line-height:1.65;
+  font-family:'Menlo','Monaco',monospace;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+/* הדגשת [משתנים] בפרומפט */
+.prompt-code .var{
+  background:#5C4210;
+  color:#FFE49E;
+  padding:1px 5px;
+  border-radius:3px;
+  font-weight:500;
+}
+.prompt-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 13px;
+  background:#15120F;
+  border-top:1px solid #3a342d;
+  direction:rtl;
+}
+.prompt-note{
+  font-size:11px;
+  color:#a8a09a;
+  direction:rtl;
+}
+.prompt-copy{
+  background:var(--terra);
+  color:#fff;
+  border:none;
+  padding:5px 12px;
+  border-radius:4px;
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  font-family:inherit;
+  transition:background .15s;
+}
+.prompt-copy:hover{background:#A66E48;}
+.prompt-copy.copied{background:var(--sage);}
+
+/* ═══ LESSON PAGE ═══ */
+.lesson-card{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;}
+.less-hdr{padding:15px 18px;cursor:pointer;transition:background .15s;}
+.less-hdr:hover{background:var(--bg-panel);}
+.less-meta{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.less-num{font-size:11px;font-weight:500;background:var(--terra-pale);color:var(--terra);padding:2px 9px;border-radius:20px;border:1px solid var(--terra);}
+.less-num.dor{background:var(--slate-pale);color:var(--slate);border-color:var(--slate);}
+.less-num.anat{background:var(--sage-pale);color:var(--sage);border-color:var(--sage);}
+.less-by{font-size:11px;color:var(--ink-light);}
+.less-title{font-size:15px;font-weight:500;color:var(--ink);}
+.less-tools{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.t-pill{font-size:11px;padding:2px 9px;background:var(--bg-panel);border-radius:20px;color:var(--ink-mid);border:1px solid var(--border);}
+.less-status{font-size:10px;padding:2px 8px;border-radius:20px;margin-right:auto;}
+
+/* כותרת נושא בתוך שיעור */
+.less-section{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:24px 0 16px;
+  direction:rtl;
+}
+.less-section-line{flex:1;height:1px;background:var(--border-mid);}
+.less-section-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+  background:var(--warm-stone);
+  padding:4px 14px;
+  border-radius:20px;
+  border:1px solid var(--border-mid);
+  white-space:nowrap;
+}
+
+.less-body{display:none;border-top:1px solid var(--border);}
+.less-body.open{display:block;}
+.less-content{padding:20px 22px;}
+
+/* טקסט שיעור — גדול וקריא */
+.less-text{
+  font-size:16px;
+  color:var(--ink-mid);
+  line-height:1.8;
+  margin-bottom:20px;
+  text-align:right;
+  direction:rtl;
+  max-width:700px;
+}
+
+/* בלוק תמונה + טקסט — טקסט מעל, תמונה מתחת ברוחב מלא */
+.less-img-block{
+  margin-bottom:24px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--bg-panel);
+}
+.less-img-block-text{
+  padding:14px 16px 10px;
+  direction:rtl;
+  text-align:right;
+}
+.less-img-block-title{
+  font-size:14px;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:6px;
+  direction:rtl;
+  text-align:right;
+}
+.less-img-block-desc{
+  font-size:16px;
+  color:var(--ink-mid);
+  line-height:1.8;
+  direction:rtl;
+  text-align:right;
+}
+.less-img-block-action{
+  font-size:13px;
+  color:var(--terra);
+  margin-top:10px;
+  padding:6px 12px;
+  background:var(--terra-pale);
+  border-radius:4px;
+  border-right:3px solid var(--terra);
+  display:block;
+  direction:ltr;
+  text-align:left;
+}
+.less-img-block-img{
+  border-top:1px solid var(--border);
+  cursor:zoom-in;
+  position:relative;
+}
+.less-img-block-img img{
+  width:100%;
+  height:auto;
+  display:block;
+  transition:opacity .15s;
+}
+.less-img-block-img:hover img{opacity:.92;}
+.less-img-block-img::after{
+  content:'🔍';
+  position:absolute;
+  bottom:8px;
+  left:8px;
+  font-size:16px;
+  background:rgba(255,255,255,.85);
+  border-radius:20px;
+  padding:2px 7px;
+  pointer-events:none;
+}
+.less-img-block-cap{
+  font-size:12px;
+  color:var(--ink-light);
+  padding:5px 10px;
+  background:var(--bg);
+  text-align:right;
+  border-top:1px solid var(--border);
+  direction:rtl;
+}
+
+/* תמונה בלי טקסט — רוחב מלא */
+.less-img-wrap{margin-bottom:18px;cursor:zoom-in;}
+.less-img-wrap img{
+  width:100%;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  display:block;
+}
+.less-img-cap{
+  font-size:12px;
+  color:var(--ink-light);
+  margin-top:5px;
+  text-align:right;
+  direction:rtl;
+  padding-right:4px;
+}
+
+/* Lightbox */
+.lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  cursor:zoom-out;
+}
+.lightbox.open{display:flex;}
+.lightbox img{
+  max-width:92vw;
+  max-height:92vh;
+  border-radius:var(--radius);
+  box-shadow:0 8px 40px rgba(0,0,0,.6);
+}
+.lightbox-close{
+  position:absolute;
+  top:16px;
+  left:16px;
+  color:#fff;
+  font-size:28px;
+  cursor:pointer;
+  background:rgba(0,0,0,.4);
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+
+.embed{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;}
+.emb-hdr{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;background:var(--bg-panel);transition:background .15s;}
+.emb-hdr:hover{background:var(--warm-stone);}
+.emb-tag{font-size:10px;background:var(--terra-pale);color:var(--terra);padding:2px 7px;border-radius:20px;border:1px solid var(--terra);}
+.emb-name{font-size:12px;font-weight:500;color:var(--ink);flex:1;}
+.emb-from{font-size:10px;color:var(--ink-light);}
+.emb-chev{width:13px;height:13px;color:var(--ink-light);transition:transform .2s;}
+.emb-body{display:none;border-top:1px solid var(--border);}
+.emb-body.open{display:block;}
+.emb-step{padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;color:var(--ink-mid);display:flex;gap:8px;}
+.emb-step:last-child{border-bottom:none;}
+.emb-sn{font-size:10px;background:var(--bg-panel);padding:2px 7px;border-radius:20px;color:var(--ink-light);white-space:nowrap;flex-shrink:0;margin-top:1px;}
+.src-note{font-size:10px;color:var(--ink-light);padding:6px 14px;background:var(--bg-panel);border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
+
+/* ── MISC ── */
+.soon-overlay{opacity:.5;pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo-heb">מליס אדריכלות ותכנון ערים</div>
+    <div class="sb-logo-en">Malis Architecture & Urban Design</div>
+  </div>
+  <div class="sb-home" onclick="goHome()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    בית
+  </div>
+  <div id="sb-tools-area"></div>
+  <div id="sb-courses-area"></div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">בית</div>
+    <div class="breadcrumb" id="breadcrumb">
+      <span class="bc-link" onclick="goHome()">🏠 בית</span>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="panel active" id="panel-home">
+      <div class="eyebrow">ספר כלים · מליס אדריכלות</div>
+      <div class="terra-line"></div>
+      <div class="home-greeting">שלום, <strong>מה תרצו לעשות היום?</strong></div>
+      <div class="wizard-card">
+        <div class="wiz-sub">ענו על שתי שאלות — אכוון אתכם לכלי הנכון</div>
+        <div class="wiz-q-label">מה התוצר הרצוי?</div>
+        <div class="wiz-opts" id="wq1">
+          <div class="wiz-opt" onclick="wizSel(1,'render',this)">הדמיה</div>
+          <div class="wiz-opt" onclick="wizSel(1,'model3d',this)">מודל תלת-מימד</div>
+          <div class="wiz-opt" onclick="wizSel(1,'detail',this)">חילוץ פרט</div>
+          <div class="wiz-opt" onclick="wizSel(1,'interior',this)">עיצוב פנים</div>
+          <div class="wiz-opt" onclick="wizSel(1,'script',this)">קוד / סקריפט</div>
+        </div>
+        <div class="wiz-q2-wrap" id="wq2-wrap">
+          <div class="wiz-q-label">איזה קלט יש לך?</div>
+          <div class="wiz-opts" id="wq2">
+            <div class="wiz-opt" onclick="wizSel(2,'photo',this)">תמונה / צילום</div>
+            <div class="wiz-opt" onclick="wizSel(2,'sketch',this)">סקיצה</div>
+            <div class="wiz-opt" onclick="wizSel(2,'plan',this)">תכנית דו-מימדית</div>
+            <div class="wiz-opt" onclick="wizSel(2,'model',this)">מודל תלת-מימד</div>
+            <div class="wiz-opt" onclick="wizSel(2,'text',this)">תיאור טקסטואלי</div>
+          </div>
+        </div>
+        <div class="wiz-result" id="wiz-result">
+          <div class="wiz-res-label">כלים מומלצים</div>
+          <div id="wiz-recs"></div>
+        </div>
+      </div>
+
+      <div class="home-section">
+        <div class="hs-title">כלים מועדפים</div>
+        <div class="fav-grid" id="fav-grid"></div>
+      </div>
+
+      <div class="home-section">
+        <div class="hs-title">קורסים ושיעורים</div>
+        <div class="course-list" id="course-list"></div>
+      </div>
+    </div>
+
+    <!-- TOOL -->
+    <div class="panel" id="panel-tool">
+      <div id="tool-content"></div>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="panel" id="panel-lessons">
+      <div id="lessons-content"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// SECTION 1: DATA — ערוך רק כאן
+// ════════════════════════════════════════════
+
+const CATS = [
+  {id:'general',   label:'רב-תכליתי',                  color:'var(--terra)'},
+  {id:'gis',       label:'GIS — מערכות מידע גיאוגרפי',   color:'var(--slate)'},
+  {id:'3d',        label:'תלת-מימד',                   color:'var(--slate)'},
+  {id:'2d',        label:'דו-מימד / הדמיה',             color:'var(--sage)'},
+  {id:'workflows', label:'Visual Scripting / Workflows', color:'var(--purple)'},
+  {id:'interior',  label:'עיצוב פנים',                  color:'var(--sand)'},
+];
+
+const TOOLS = [
+  {id:'claude', name:'Claude', cat:'general', starred:true, price:'Pro ~$20/חודש', pc:'pp', parent:null,
+   desc:'מודל שפה של Anthropic. כתיבת קוד Python לRhino, Polysurfaces, ניתוח מסמכים ומצגות. גמיש ודינמי לשיח עיצובי. תומך בפרויקטים, Skills, וMemory לבניית יועצים מקצועיים.',
+   strengths:['עריכה דינמית בשיח','Polysurfaces לריינו','בניית יועצים מקצועיים עם Projects','Skills ו-Memory לאורך זמן'],
+   weaknesses:['MCP עם Revit/AutoCAD עדיין מוגבל'],
+   guides:[
+     {id:'claude-poly',     label:'Polysurfaces לRhino',                    cat:'תלת-מימד',       soon:false},
+     {id:'claude-gh',       label:'GhPython לGrasshopper',                  cat:'תלת-מימד',       soon:true},
+     {id:'claude-profile',  label:'Profile — הגדרות אישיות קבועות',         cat:'Projects ויועצים', soon:false},
+     {id:'claude-projects', label:'Projects — מרחב עבודה ממוקד ויועצים',    cat:'Projects ויועצים', soon:false},
+     {id:'claude-skills',   label:'Skills — כלים מתקדמים ומומחים',          cat:'Projects ויועצים', soon:false},
+     {id:'claude-memory',   label:'Memory — זיכרון מתמשך ולמידה',           cat:'Projects ויועצים', soon:false},
+   ]},
+  {id:'gemini', name:'Gemini', cat:'general', starred:true, price:'חינם / Pro', pc:'pf', parent:null,
+   desc:'מודלי AI של Google. גישה לNano Banana (Imagen 3) לעיבוד תמונות אדריכליות.',
+   strengths:['חינמי','Nano Banana מובנה','חיפוש Google משולב'],
+   weaknesses:['פרומפטים ארוכים נחסמים לעיתים'],
+   guides:[]},
+  {id:'chatgpt', name:'ChatGPT', cat:'general', starred:false, price:'חינם / Plus', pc:'pm', parent:null,
+   desc:'מודל GPT-4o של OpenAI. שיח כללי, ניתוח תמונות, כתיבת קוד.',
+   strengths:['ממשק מוכר','DALL-E משולב'],
+   weaknesses:['פחות גמיש מקלוד לקוד מורכב'],
+   guides:[]},
+  {id:'nanobana', name:'Nano Banana', cat:'2d', starred:true, price:'חינם', pc:'pf', parent:'gemini',
+   desc:'Imagen 3 של Google דרך Gemini ו-Google AI Studio. מצוין לחילוץ פרטים אדריכליים, יצירת איזומטריים נקיים, והפקת הדמיות מסקצ\'אפ + רפרנסים. מבוסס ניסיון מעשי מפרויקט מתחם כורזין בגבעתיים.',
+   strengths:['חינמי לחלוטין','איכות גבוהה ומהיר','עובד טוב עם מודל נפחי + רפרנסים'],
+   weaknesses:['פרופורציות אדריכליות לא מדויקות (~75-80% דיוק)','קושי בשמירת זווית עקבית','לא תומך בשינויים כירורגיים'],
+   guides:[
+     {id:'nb-extract',     label:'חילוץ פרט מחזית',                cat:'בסיס', soon:false},
+     {id:'nb-isometric',   label:'מבנה שלם 4 חזיתות',              cat:'בסיס', soon:false},
+     {id:'nb-sketch',      label:'סקיצה → הדמיה',                   cat:'בסיס', soon:false},
+     {id:'nb-principles',  label:'עקרונות עבודה — לימוד, איטרציה, שיחה',  cat:'מתודולוגיה', soon:false},
+     {id:'nb-refs',        label:'עבודה עם רפרנסים — שיטת ✅/❌',    cat:'מתודולוגיה', soon:false},
+     {id:'nb-render-flow', label:'הדמיה מסקצ\'אפ + רפרנסים — תהליך מלא', cat:'הדמיה מסקצ\'אפ', soon:false},
+     {id:'nb-alternatives',label:'חלופות עיצוב — אותו מבט, סגנונות שונים', cat:'הדמיה מסקצ\'אפ', soon:false},
+   ]},
+  {id:'tripo', name:'Tripo AI', cat:'3d', starred:true, price:'~$20/חודש', pc:'pp', parent:null,
+   desc:'תמונה/סקיצה → Mesh 3D מפורט. Segmentation לפירוק לשכבות. ייצוא OBJ לRhino.',
+   strengths:['ביצועים גבוהים בשוק','Segmentation מובנה','ייצוא גמיש'],
+   weaknesses:['לא קורא תכניות דו-מימדיות היטב','Mesh קשה לעריכה גיאומטרית'],
+   guides:[
+     {id:'tripo-img3d',  label:'תמונה → מודל 3D',       cat:'תלת-מימד', soon:false},
+     {id:'tripo-seg',    label:'Segmentation — פירוק לשכבות', cat:'תלת-מימד', soon:false},
+     {id:'tripo-export', label:'ייצוא לRhino',           cat:'תלת-מימד', soon:true},
+   ]},
+  {id:'rodin', name:'Rodin (Hyper3D)', cat:'3d', starred:true, price:'מנוי', pc:'pm', parent:null,
+   desc:'3D to 3D — מסות קיימות מRhino/SketchUp → מודל מפורט באותו נפח. Voxel ControlNet.',
+   strengths:['שומר על נפח מקורי','איכות Gen-2.5 גבוהה','PBR textures'],
+   weaknesses:['יקר יחסית','מידות לא מדויקות (פרופורציות נכונות)'],
+   guides:[
+     {id:'rodin-3dto3d',  label:'3D to 3D — מסות → מודל מפורט', cat:'תלת-מימד', soon:false},
+     {id:'rodin-texture', label:'ייבוא טקסטורות PBR לRhino ולSketchUp', cat:'תלת-מימד', soon:false},
+   ]},
+  {id:'meshy', name:'Meshy AI', cat:'3d', starred:false, price:'חינם / $20-60', pc:'pm', parent:null,
+   desc:'מחולל 3D כללי. Meshy 6 משופר — יותר למעצבי משחקים מאדריכלים.',
+   strengths:['חינמי בסיסי'],
+   weaknesses:['שליטה נמוכה','פחות מדויק לאדריכלות'],
+   guides:[{id:'meshy-ov', label:'סקירה כללית', cat:'תלת-מימד', soon:true}]},
+  {id:'comfyui', name:'ComfyUI', cat:'workflows', starred:true, price:'חינם (Open Source)', pc:'pf', parent:null,
+   desc:'Visual Scripting עם שליטה מקסימלית. Open Source, רבדים, מורכב להתקנה. מועדף על אמנים.',
+   strengths:['שליטה מלאה','Open Source','קהילה ענקית'],
+   weaknesses:['התקנה מורכבת','עקומת למידה תלולה'],
+   guides:[{id:'comfyui-intro', label:'מבוא וממשק', cat:'Workflows', soon:false}]},
+  {id:'weavy', name:'Weavy', cat:'workflows', starred:true, price:'קרדיטים', pc:'pm', parent:null,
+   desc:'Visual Scripting Web-based ידידותי. ספריית Workflows מוכנים, שיתוף צוות.',
+   strengths:['ידידותי','Web-based','Workflows מוכנים'],
+   weaknesses:['מודלים סינים בעיקר','קרדיטים יקרים'],
+   guides:[
+     {id:'weavy-intro',    label:'מבוא וממשק',           cat:'Workflows', soon:false},
+     {id:'weavy-workflow', label:'שימוש ב-Workflow קיים', cat:'Workflows', soon:false},
+   ]},
+  {id:'xfigura', name:'xFigura', cat:'workflows', starred:true, price:'קרדיטים', pc:'pm', parent:null,
+   desc:'Visual Scripting מותאם לאדריכלים. Boards, טמפלייטים אדריכליים, Visione Agent.',
+   strengths:['מותאם לאדריכלות','Canvas גמיש','טמפלייטים מוכנים'],
+   weaknesses:['חדש יחסית','תיעוד דל'],
+   guides:[
+     {id:'xfigura-intro',  label:'מבוא וממשק',   cat:'Workflows', soon:false},
+     {id:'xfigura-canvas', label:'בניית Canvas', cat:'Workflows', soon:false},
+   ]},
+  {id:'coohom', name:'Coohom', cat:'interior', starred:true, price:'חינם / Elite', pc:'pm', parent:null,
+   desc:'תכנית 2D → עיצוב פנים מלא עם ריהוט, חומרים ורינדור. מיועד לדירות ומרחבי מגורים.',
+   strengths:['קל לשימוש','רינדור מובנה','ספריית ריהוט'],
+   weaknesses:['לא מתאים לפרויקטים גדולים','מוגבל לעיצוב פנים'],
+   guides:[{id:'coohom-fp', label:'תכנית 2D → 3D', cat:'עיצוב פנים', soon:false}]},
+  {id:'arcgis', name:'ArcGIS AI', cat:'gis', starred:true, price:'מנוי ארגוני', pc:'pp', parent:null,
+   desc:'מערכת ה-GIS המובילה בעולם (Esri) עם שכבת AI מלאה: GeoAI לניתוח מרחבי, AI Assistants לתפעול בשפה טבעית, ו-AI Agents עם MCP. רלוונטי לתכנון עירוני, אסטרטגי וניתוח שטח.',
+   strengths:['מעל 100 מודלים מאומנים מראש (Living Atlas)','AI Assistant בעברית','חיבור MCP לקלוד','אינטגרציה מלאה לתהליכי GIS קיימים'],
+   weaknesses:['רוב היכולות בבטא/Preview 2026','דורש Metadata איכותי לפעולת AI טובה','עלויות קרדיטים ל-Deep Learning בענן'],
+   guides:[
+     {id:'arcgis-overview',  label:'סקירה כללית — שלושת עמודי ה-AI', cat:'מבוא',          soon:false},
+     {id:'arcgis-geoai',     label:'GeoAI — מודלים מאומנים מ-Living Atlas', cat:'GeoAI',  soon:false},
+     {id:'arcgis-assistant', label:'AI Assistant — שאילתות בשפה טבעית', cat:'AI Assistants', soon:false},
+     {id:'arcgis-metadata',  label:'AI-Ready ArcGIS — הכנת Metadata', cat:'הכנת נתונים',  soon:false},
+     {id:'arcgis-mcp',       label:'חיבור Claude ל-ArcGIS דרך MCP',   cat:'AI Agents',    soon:false},
+   ]},
+];
+
+const GUIDES = {
+  'claude-poly':{
+    title:'Polysurfaces לRhino ולSketchUp',
+    subtitle:'יצירת גיאומטריה עריכה מלאה דרך סקריפט Python של Claude.',
+    tags:['Python','Rhino','SketchUp','Polysurfaces'],
+    intro:'כשמבקשים מ-Claude ליצור גיאומטריה תלת-מימדית, יש שני סוגי פלט אפשריים — וההבדל ביניהם מהותי לעבודה המשך.\n\nהסוג הראשון הוא Mesh: רשת של משולשים שמייצגת את צורת המבנה. זה מה שמוציאים כלים כמו Tripo. Mesh נראה טוב ויזואלית, אבל קשה לעריכה גיאומטרית — לא ניתן לשנות מידה, להוסיף קומה, או לערוך פתחים בצורה נוחה.\n\nהסוג השני הוא Polysurfaces: גופים גיאומטריים בנויים ממשטחים מוגדרים. Claude מפיק סקריפט Python שמריצים בתוך Rhino — והתוצר הוא גיאומטריה עריכה מלאה עם Layers. זו קפיצת מדרגה: ניתן לשנות מידות, להסיר אלמנטים, לשלב עם מודלים קיימים.\n\nב-SketchUp התהליך שונה במקצת — Claude מפיק סקריפט Ruby שמריצים דרך Extensions של SketchUp, והגיאומטריה מגיעה כ-Solid Groups עריכים.',
+    steps:[
+      {title:'פתח שיחה חדשה',
+       desc:'היכנס לclaude.ai. לחץ על כפתור "+" או "New chat" בסרגל הצד הימני.',
+       path:['claude.ai','כפתור + / New chat'],
+       img:'claude_3d_interactive', imgCap:'Claude — ממשק ראשי',
+       tip:'ודא שאתה מחובר עם חשבון Pro — ב-Free יש מגבלות על אורך הקוד שמוחזר.',tipType:'terra',
+       seeDo:{see:'מסך שיחה ריקה עם תיבת טקסט בתחתית.',do:'המשך לשלב הבא.'},
+       code:null},
+      {title:'כתוב פרומפט — תאר את הגיאומטריה',
+       desc:'תאר בפירוט: סוג האובייקט, מידות, מאפיינים מיוחדים. בקש Python Script לRhino.',
+       path:['תיבת טקסט','הכנס פרומפט','Enter'],
+       img:null, imgCap:null,
+       tip:'כלול תמיד: "Python script for Rhino 7" + המידות ביחידות מטר.',tipType:'terra',
+       seeDo:{see:'תיבת הקלט ריקה.',do:'הכנס את הפרומפט ולחץ Enter.'},
+       code:'Create a Python script for Rhino 7 that generates a rectangular building volume:\n- Width: 20m, Depth: 12m, Height: 15m\n- 4 floors with slab thickness 0.3m\n- Organized in layers by element type\n- Export as Polysurfaces (not Mesh)'},
+      {title:'העתק את הסקריפט',
+       desc:'Claude יחזיר בלוק קוד Python. לחץ על כפתור "Copy" בפינת הבלוק.',
+       path:['בלוק קוד','כפתור Copy'],
+       img:'claude_obj_download', imgCap:'כפתור Copy בפינת בלוק הקוד',
+       tip:null, tipType:null,
+       seeDo:{see:'בלוק קוד עם כפתור Copy בפינה.',do:'לחץ Copy — הקוד מועתק ללוח.'},
+       code:null},
+      {title:'הרץ בRhino — RunPythonScript',
+       desc:'ב-Rhino: כתוב בשורת הפקודה "EditPythonScript". בחלון שנפתח — הדבק את הקוד ולחץ Run.',
+       path:['Rhino','שורת פקודה: EditPythonScript','הדבק קוד','Run ▶'],
+       img:'rhino_polysurface', imgCap:'תוצר Claude בRhino — Polysurfaces בLayers',
+       tip:'אם יש שגיאה — העתק את הודעת השגיאה חזרה לקלוד ובקש תיקון. בדרך כלל מספיקה איטרציה אחת.',tipType:'sl',
+       seeDo:{see:'חלון Python Script Editor ריק.',do:'הדבק קוד (Ctrl+V) ← לחץ Run.'},
+       code:null},
+      {title:'חלופה: ב-SketchUp — סקריפט Ruby',
+       desc:'Claude יכול לפיק גם סקריפט Ruby ל-SketchUp. בקש במפורש: "Ruby script for SketchUp". להרצה: Extensions → Ruby Console → הדבק ← Enter.',
+       path:['SketchUp','Extensions','Ruby Console','הדבק','Enter'],
+       img:null, imgCap:null,
+       tip:'התוצר ב-SketchUp מגיע כ-Solid Groups — עריכים, אך פחות גמישים מ-Polysurfaces בRhino.',tipType:'sl',
+       seeDo:{see:'חלון Ruby Console בתחתית המסך.',do:'הדבק סקריפט ← Enter ← הגיאומטריה מופיעה בסצנה.'},
+       code:'Create a Ruby script for SketchUp that generates a rectangular building volume:\n- Width: 20m, Depth: 12m, Height: 15m\n- 4 floors with slab thickness 0.3m\n- Each element as a separate Solid Group'},
+    ]
+  },
+  'claude-profile':{
+    title:'Profile — הגדרות אישיות קבועות',
+    subtitle:'הגדר מי אתה, איך אתה חושב, ומה אתה מצפה — פעם אחת, לכל השיחות.',
+    tags:['Claude','Profile','פרסונליזציה'],
+    intro:'ה-Profile הוא השכבה הקבועה ביותר בעבודה עם Claude — הגדרות שתקפות לכל השיחות. כאן קובעים: מי אתה מקצועית, מה הרקע שלך, באיזו שפה לענות, ואיזה סגנון תשובות מתאים לך.\n\nהפילוסופיה: Claude מתחיל כל שיחה "עיוור" — הוא לא יודע שאתה אדריכל, שאתה עובד בישראל, שאתה מעדיף תשובות קצרות. ה-Profile נותן לו את ההקשר הבסיסי מראש, כך שאתה לא צריך לחזור ולהסביר בכל שיחה.',
+    steps:[
+      {title:'פתח את הגדרות ה-Profile',
+       desc:'לחץ על שמך / האייקון שלך בפינה הימנית-תחתונה של claude.ai. בחר "Profile".',
+       path:['claude.ai','שם משתמש','Profile'],
+       img:'lesson03_06', imgCap:'ממשק Profile Settings',
+       tip:'ה-Profile שונה מ-Project Instructions — הוא קבוע לכל השיחות, לא ספציפי לפרויקט אחד.', tipType:'terra',
+       seeDo:{see:'ממשק הגדרות עם שדות: שם, תפקיד, הוראות.',do:'מלא את כל השדות בעברית.'},
+       code:null},
+      {title:'הגדר מי אתה',
+       desc:'כתוב תיאור קצר: תפקיד, מקום עבודה, תחומי עניין מקצועיים. Claude ישתמש בזה בכל שיחה.',
+       path:null,
+       img:null, imgCap:null,
+       tip:null, tipType:null,
+       seeDo:null,
+       prompts:[{
+         title:'דוגמה — Profile לאדריכל',
+         code:'אני אדריכל ומתכנן עירוני במשרד אדריכלות בישראל.\nאני עובד עם AutoCAD, Revit, SketchUp, Rhino ו-GIS.\nאני מוביל את תחום ה-AI במשרד.\n\nאנא ענה תמיד בעברית.\nתשובות קצרות וממוקדות — אלא אם ביקשתי הרחבה.\nכשאתה לא בטוח — אמור זאת במפורש.',
+         note:'התאם לפרופיל שלך'
+       }]},
+    ]
+  },
+  'claude-projects':{
+    title:'Projects — מרחב עבודה ממוקד ויועצים מקצועיים',
+    subtitle:'הגדר פרויקט עם הנחיות, קבצים, ויועץ מתמחה — ל-Claude עם זיכרון הקשר.',
+    tags:['Claude','Projects','יועצים'],
+    intro:'Project ב-Claude הוא מרחב עבודה נפרד עם הנחיות ייחודיות, קבצי Knowledge Base, וזיכרון שיחה. בניגוד ל-Profile (קבוע לכל השיחות), Project הוא ספציפי למשימה אחת.\n\nהשימוש החזק ביותר: בניית יועצים מקצועיים. לדוגמה — יועץ תב"ע שמכיר חוקי תכנון, יועץ פרוגרמה שחישב שטחים, יועץ משפטי שמכיר תקנות בנייה. כל אחד Project נפרד, עם קבצים ספציפיים לתחומו.\n\nהארכיטקטורה שהציגה ענת שטיבלמן: Profile (מי אתה) ← Project Instructions (מי היועץ) ← Files (מה הוא יודע) ← Chat (ביצוע).',
+    steps:[
+      {title:'צור Project חדש',
+       desc:'ב-claude.ai, לחץ על "Projects" בסרגל הצד. לחץ "New Project". תן שם ברור.',
+       path:['claude.ai','Projects','New Project','שם'],
+       img:'lesson03_05', imgCap:'Project Knowledge ו-Set Project Instructions',
+       tip:'תן שם שמתאר את היועץ, לא את הפרויקט: "יועץ תב"ע", "יועץ פרוגרמה", "יועץ עלויות".', tipType:'terra',
+       seeDo:{see:'Project ריק עם אפשרויות הגדרה.',do:'לחץ Set Project Instructions.'},
+       code:null},
+      {title:'כתוב Project Instructions',
+       desc:'הגדר: מי הוא היועץ, ממה הוא עונה, מה הפלט שלו. זה הלב של היועץ.',
+       path:['Set Project Instructions','כתוב הנחיות','Save'],
+       img:'lesson03_07', imgCap:'דיאלוג Set Project Instructions',
+       tip:null, tipType:null,
+       seeDo:{see:'שדה טקסט ריק.',do:'כתוב הנחיות מפורטות ← Save.'},
+       prompts:[{
+         title:'דוגמה — יועץ תב"ע',
+         code:'אתה יועץ תב"ע מומחה.\nאתה עונה אך ורק מתוך קבצי התקנות שהועלו לפרויקט.\nאם השאלה חורגת מהקבצים — אמור זאת במפורש.\n\nהפלט שלך:\n- תשובה ישירה לשאלה\n- סעיף החוק הרלוונטי (ציטוט מדויק)\n- המלצה מעשית\n\nאם יש סתירה בין חוקים — ציין זאת.',
+         note:'החלף לתחום היועץ שאתה בונה'
+       }]},
+      {title:'העלה קבצים ל-Knowledge Base',
+       desc:'לחץ "Add to Project" → "Upload Files". העלה קבצי PDF, Word, טקסט — חוקים, תקנות, נהלים.',
+       path:['Add to Project','Upload Files','בחר קבצים'],
+       img:'lesson03_17', imgCap:'Files Panel עם קבצי יועצים שונים',
+       tip:'Claude קורא PDF — אפשר להעלות תקנות בנייה, חוקי תכנון, נהלי משרד. הוא ייתן תשובות מתוכם.', tipType:'terra',
+       seeDo:{see:'Files Panel ריק.',do:'העלה קבצים ← ודא שהם מופיעים ברשימה.'},
+       code:null},
+      {title:'פתח שיחה עם היועץ',
+       desc:'לחץ "New Chat" בתוך ה-Project. היועץ פועל עם כל ההגדרות והקבצים שהגדרת.',
+       path:['Project','New Chat'],
+       img:'lesson03_15', imgCap:'שיחה עם יועץ פרוגרמה מוגדר',
+       tip:'כל שיחה בתוך Project משתמשת בהנחיות ובקבצים — אבל כל שיחה מתחילה ללא זיכרון השיחה הקודמת. לרצף — השתמש באותה שיחה.', tipType:'sl',
+       seeDo:{see:'שיחה חדשה עם היועץ.',do:'שאל שאלה מקצועית — היועץ יענה מתוך הקבצים.'},
+       code:null},
+    ]
+  },
+  'claude-skills':{
+    title:'Skills — כלים מתקדמים ומומחים',
+    subtitle:'Skills מוסיפים מומחיות ספציפית ל-Claude — מעבר להנחיות פשוטות.',
+    tags:['Claude','Skills','כלים מתקדמים'],
+    intro:'Skills הם הרמה המתקדמת יותר של התאמה אישית ב-Claude. בעוד Project Instructions מגדירות "מי הוא" ו-"מה הוא יודע", Skills מגדירים "מה הוא יכול לעשות" — יכולות ספציפיות עם לוגיקה מובנית.\n\nענת שטיבלמן בנתה Skills כמו: dynamic-intuitive-app-architecture, archi-tact-expert, epoch-industrial-designer. כל אחד מתמחה בתחום ויכול לשלב מידע ממקורות שונים.\n\nחשוב: Skills זמינים כרגע בגרסאות מסוימות של Claude ובאמצעות Claude.ai בלבד.',
+    steps:[
+      {title:'גש לניהול Skills',
+       desc:'ב-claude.ai, לחץ על שמך ← "Customize and Skills".',
+       path:['claude.ai','שם משתמש','Customize and Skills'],
+       img:'lesson03_08', imgCap:'ממשק Skills עם רשימת כלים אישיים',
+       tip:'Skills שונים מ-Projects — הם כלים שעובדים לאורך Projects ושיחות שונות.', tipType:'terra',
+       seeDo:{see:'רשימת Skills קיימים.',do:'לחץ "Create Skill" להוספת כלי חדש.'},
+       code:null},
+      {title:'הגדר Skill חדש',
+       desc:'תן שם, תיאור, והוראות מפורטות. הוראות ה-Skill מוסיפות על גבי ה-Profile וה-Project.',
+       path:['Create Skill','שם','הוראות','Save'],
+       img:null, imgCap:null,
+       tip:'Skill טוב מגדיר: מה הקלט, מה הלוגיקה, מה הפלט — בצורה ברורה ומובנית.', tipType:'sl',
+       seeDo:{see:'טופס יצירת Skill.',do:'מלא שם, תיאור, הוראות ← Save.'},
+       code:null},
+    ]
+  },
+  'claude-memory':{
+    title:'Memory — זיכרון מתמשך ולמידה',
+    subtitle:'Claude לומד ממך עם הזמן — אם אתה מלמד אותו.',
+    tags:['Claude','Memory','פרסונליזציה'],
+    intro:'Memory מאפשרת ל-Claude לזכור דברים שאמרת מעבר לשיחה אחת. זה מה שהופך אותו מכלי שמתחיל מאפס בכל שיחה — לשותף שמכיר אותך.\n\nאיך זה עובד: כשאתה אומר ל-Claude "זכור ש...", או כשאתה מתקן אותו ("לא, אני מעדיף..."), הוא יכול לשמור את זה ולהחיל בשיחות עתידיות.\n\nהשימוש החשוב ביותר: תיקון הרגלים. Claude ענה בדרך שלא אהבת? תגיד לו. הוא יזכור ויתאים. ככל שתעבוד איתו יותר ותלמד אותו — כך התשובות יהיו מדויקות יותר.',
+    steps:[
+      {title:'הפעל Memory',
+       desc:'ב-Settings → "Memory" → הפעל. Claude יתחיל לשמור פרטים שאתה מבקש לזכור.',
+       path:['claude.ai','Settings','Memory','הפעל'],
+       img:null, imgCap:null,
+       tip:'בדוק מה Claude זוכר בכל עת דרך Settings → Memory → Manage.', tipType:'sl',
+       seeDo:{see:'מתג Memory כבוי.',do:'הפעל ← ודא שכתוב "Memory is on".'},
+       code:null},
+      {title:'למד את Claude העדפות',
+       desc:'תוך כדי שיחה — תקן, הנחה, וכשמשהו עבד טוב — בקש לזכור.',
+       path:null,
+       img:null, imgCap:null,
+       tip:'Memory מצטברת עם הזמן. אחרי חודש של עבודה — Claude יכיר אותך הרבה יותר טוב.', tipType:'terra',
+       seeDo:{see:'Claude ענה בדרך שלא מתאימה.',do:'אמור: "זכור שאני מעדיף [X]". הוא יאשר ויזכור.'},
+       prompts:[{
+         title:'דוגמאות להוראות זיכרון',
+         code:'זכור שאני עובד בעברית תמיד.\nזכור שאני אדריכל — הסברים טכניים במונחים מקצועיים.\nזכור שאני מעדיף תשובות קצרות ורשימות על פני פסקאות ארוכות.\nזכור שכשאני שולח תמונת מבנה — אני רוצה ניתוח אדריכלי, לא תיאור כללי.',
+         note:'הוסף העדפות לפי הניסיון שלך עם Claude'
+       }]},
+    ]
+  },
+  'nb-extract':{
+    title:'חילוץ פרט מחזית',
+    subtitle:'מתמונת חזית — חלץ פרט בודד וייצר איזומטרי נקי מוכן לTripo.',
+    tags:['Nano Banana','תמונה → איזומטרי','חינם'],
+    intro:'Nano Banana (Imagen 3 של Google, דרך Gemini) מצטיין בחילוץ פרט אדריכלי בודד מתמונת חזית. התוצר — איזומטרי נקי על רקע לבן — מוכן ישירות להכנסה לTripo ליצירת מודל 3D.',
+    steps:[
+      {title:'כניסה לGemini',
+       desc:'עבור לכתובת gemini.google.com. התחבר עם חשבון Google.',
+       path:['gemini.google.com','התחבר'],
+       img:null, imgCap:null,
+       tip:'חלופה: Krea.ai — ממשק מתקדם יותר עם שליטה על seed ו-strength.',tipType:'sl',
+       seeDo:{see:'מסך הבית של Gemini.',do:'ודא שהתחברת ← המשך.'},
+       code:null},
+      {title:'העלה את תמונת הקלט',
+       desc:'בתיבת הצ&#39;אט — לחץ סמל המצלמה. בחר תמונת החזית. ניתן לגרור ישירות לתיבה.',
+       path:['תיבת צ&#39;אט','סמל מצלמה','בחר תמונה'],
+       img:'nano_banana_facade', imgCap:'קלט: תמונת חזית → פלט: פרט בודד איזומטרי על רקע לבן',
+       tip:'ודא תמונה ברורה, ניגודיות טובה, ללא הסתרות. אפשר לשפר תמונות מראש בפוטושופ.',tipType:'terra',
+       seeDo:{see:'התמונה מוצגת בתיבת הצ&#39;אט לפני השליחה.',do:'כתוב פרומפט בשלב הבא ← Enter.'},
+       code:null},
+      {title:'כתוב פרומפט קצר ומדויק',
+       desc:'פרומפטים קצרים עובדים — ארוכים נחסמים על ידי Gemini. 1-2 משפטים בלבד.',
+       path:null,
+       img:null, imgCap:null,
+       tip:'אם נחסם — קצר עוד יותר. אם פרט לא מדויק — ציין: "the diamond-shaped panel".',tipType:'terra',
+       seeDo:null,
+       code:'convert this into an isometric model of the individual facade component, like a rhino model, white background'},
+      {title:'הורד ובדוק',
+       desc:'Gemini ייצר תמונה. בדוק: רקע לבן? גיאומטריה ברורה? פרט מבודד?',
+       path:['לחץ ימין על תמונה','שמור תמונה'],
+       img:null, imgCap:null,
+       tip:null, tipType:null,
+       seeDo:{see:'תמונה: פרט בודד, מבט איזומטרי 45°, רקע לבן נקי.',do:'הורד → הכנס לTripo ליצירת מודל 3D.'},
+       code:null},
+    ]
+  },
+  'nb-principles':{
+    title:'עקרונות עבודה עם Nano Banana',
+    subtitle:'לימוד לפני ביצוע, איטרציה מבוקרת, מתי לפתוח שיחה חדשה.',
+    tags:['Nano Banana','שיטה','מתודולוגיה'],
+    status:'<strong>מתודולוגיה בפיתוח</strong> — מבוססת על ניסיון מעשי מפרויקט מתחם כורזין בגבעתיים. הצלחה חלקית (~75-80% דיוק בחלופות שונות). העקרונות נכונים, התוצאות תלויות בכלי. הפרק יתעדכן עם הצטברות ניסיון.',
+    intro:'Nano Banana הוא לא רק "כלי שמייצר תמונה מפרומפט". כדי לקבל תוצאות אדריכליות שמיתאמות לכוונת המתכנן, נדרשת מתודולוגיה — לא רק פרומפט טוב יותר.\n\nהעיקרון המרכזי שגילינו: המודל מייצר תמונות טובות יותר כשהוא "מבין" לפני שהוא "עושה". במקום פרומפט אחד ארוך — מפצלים לשלבים, ומאלצים את המודל להוכיח הבנה לפני ביצוע.\n\nשני עקרונות נוספים הכרחיים: איטרציה מבוקרת (שינוי 1-2 דברים בלבד בכל סבב), והבנה מתי לוותר על שיחה ולפתוח חדשה.',
+    learnFirst:{
+      title:'לימוד לפני ביצוע — הכלל המרכזי',
+      body:'במקום פרומפט אחד ארוך, פצל לשלושה שלבים נפרדים:\n• שלב א: שלח תמונות + הסבר מה הן מייצגות — בקש אישור בלבד\n• שלב ב: שלח רפרנסים + הסבר מה לקחת מכל אחד — בקש אישור בלבד\n• שלב ג: רק אז בקש יצירת תמונה\n\nבלי השיטה הזו, המודל "מנחש" מה רצית — והתוצאה היא לוטרי.',
+      stop:'⚠️ STOP. Do NOT generate. Confirm in text only.'
+    },
+    steps:[
+      {title:'עיקרון 1 — לימוד לפני ביצוע',
+       desc:'שלח קודם את כל החומר ובקש מהמודל לאשר שהוא הבין. בכל הודעת לימוד — סגור עם STOP. רק כשאתה בטוח שהוא מבין, עבור לביצוע.',
+       path:null, img:null, imgCap:null, tip:null, tipType:null,
+       seeDo:{see:'המודל מנסה לייצר תמונה מיד מהפרומפט הראשון.',do:'הוסף ⚠️ STOP. Do NOT generate. Confirm in text only. בסוף כל הודעת לימוד.'}},
+      {title:'עיקרון 2 — איטרציה מבוקרת',
+       desc:'כשמתקנים תמונה — שנה דבר אחד או שניים בלבד. בקשת שינויים רבים = המודל מפרש מחדש הכל. הוסף תמיד "Do not change anything else at all".',
+       path:null, img:null, imgCap:null,
+       tip:'אם ביקשת שינוי אחד והוא שינה גם דברים אחרים — חזור לתמונה הקודמת ובקש שוב יותר ספציפי.', tipType:'terra',
+       seeDo:{see:'תיקון אחד הפך לתמונה שונה לחלוטין.',do:'הוסף Do not change anything else at all בכל בקשת שינוי.'},
+       prompts:[{
+         title:'תבנית — בקשת שינוי כירורגי',
+         code:'Use last image as base.\nChange ONE thing only:\n\n[תיאור ספציפי מאוד של מה לשנות]\nCurrently: [מה לא נכון]\nShould be: [מה צריך להיות]\n\nDo not change anything else at all.',
+         note:'החלף את [המשתנים] לפי השינוי הנדרש'
+       }]},
+      {title:'עיקרון 3 — מתי לפתוח שיחה חדשה',
+       desc:'אחרי 6-8 סבבי תיקון — השיחה מאבדת כיוון. כשהמודל חוזר לגרסאות קודמות, או מערבב סגנונות שונים — סימן ברור. פתח שיחה חדשה עם התמונה הטובה ביותר.',
+       path:null, img:null, imgCap:null,
+       tip:'לכל סגנון שונה — שיחה נפרדת. הסגנון הישן "מזהם" את החדש. זהו כלל ברזל.', tipType:'sl',
+       seeDo:{see:'המודל מתעלם מהוראות, חוזר לטעויות ישנות.',do:'שמור את התמונה הטובה ביותר. פתח שיחה חדשה איתה כנקודת מוצא.'}},
+    ]
+  },
+  'nb-refs':{
+    title:'עבודה עם רפרנסים — שיטת ✅/❌',
+    subtitle:'הכלי החשוב ביותר בעבודה אדריכלית עם Nano Banana.',
+    tags:['Nano Banana','רפרנסים','שיטה'],
+    status:'<strong>מתודולוגיה בפיתוח</strong> — מבוססת על ניסיון מעשי מפרויקט גבעתיים. השיטה משפרת משמעותית את התוצאות אך לא פותרת את כל הבעיות.',
+    intro:'הטעות הנפוצה ביותר: להעלות רפרנס ולצפות שהמודל יבין מה בדיוק לקחת. הוא לוקח את מה שהוא רואה כדומיננטי — לא בהכרח מה שרצית.\n\nהפתרון: לכל תמונת רפרנס, להגדיר במפורש מה לקחת ומה לא לקחת. שיטת ✅/❌. בנוסף, להפריד באופן ברור בין רפרנס שמשמש לקומפוזיציה (זווית, מבט) לבין רפרנס שמשמש לסגנון (חומרים, פרטים).',
+    learnFirst:{
+      title:'הפרדה בין סוגי רפרנסים',
+      body:'שני סוגים — אסור לערבב:\n• COMPOSITION reference — לזווית, מבט, פריסה (תמונה אחת בלבד!)\n• STYLE references — לחומרים, פרטים, סגנון (2-3 תמונות)\n\nהרפרנס הראשון שמעלים מקבל משקל גבוה יותר. סדר ההעלאה חשוב.',
+      stop:'Image 1 is COMPOSITION reference only. Images 2-3 are STYLE references only.'
+    },
+    steps:[
+      {title:'הגדר ✅ Take / ❌ Do NOT take',
+       desc:'לכל רפרנס — כתוב במפורש מה לקחת ומה לא לקחת. ספציפי ככל האפשר: חומר, צבע, פרט, קצב, גובה, מיקום.',
+       path:null, img:null, imgCap:null,
+       tip:'ככל שתהיה יותר ספציפי — כך התוצאה תהיה יותר קרובה לכוונה.', tipType:'terra',
+       seeDo:null,
+       prompts:[{
+         title:'תבנית — הגדרת רפרנס',
+         code:'IMAGE 2 ([שם הרפרנס — למשל: Campus Irchel, Zurich]):\n✅ Take: [טיח בז\' נייטרלי, עמודים עגולים דקים, חלונות סרט אופקיים]\n❌ Do NOT take: [גובה הבניין, מיקום העצים, זווית הצילום]',
+         note:'דוגמה מפרויקט גבעתיים — חלופה אופקית'
+       }]},
+      {title:'סדר העלאה — קומפוזיציה תחילה',
+       desc:'הרפרנס הראשון מקבל משקל גבוה. סדר נכון: (1) קומפוזיציה — זווית ומבט, (2) מבנה/מאסה, (3) רפרנסי סגנון.',
+       path:null, img:null, imgCap:null, tip:null, tipType:null,
+       seeDo:{see:'תמונת הקומפוזיציה צריכה להיות הראשונה בהודעה.',do:'סדר: composition → massing → style. הסבר במפורש את התפקיד של כל אחת.'}},
+      {title:'אישור הבנה לפני יצירה',
+       desc:'אחרי הגדרת הרפרנסים — בקש מהמודל לתאר במילים מה הוא ראה. זה חושף אי-הבנות לפני שהן הופכות לתמונה גרועה.',
+       path:null, img:null, imgCap:null, tip:null, tipType:null,
+       seeDo:null,
+       prompts:[{
+         title:'תבנית — בקשת אישור הבנה',
+         code:'Before generating, describe back to me\nwhat you see in the [reference name] rendering:\n- Column thickness and character\n- Window size and depth\n- Material texture and color\n- Viewpoint and camera angle\n\nDo NOT generate yet.',
+         note:'תמיד לפני יצירה ראשונה — בודקים שהמודל מבין נכון'
+       }]},
+    ]
+  },
+  'nb-render-flow':{
+    title:'הדמיה מסקצ\'אפ + רפרנסים — תהליך מלא',
+    subtitle:'7 שלבים מבוססי ניסיון מעשי. מקרה לימוד: מתחם כורזין, גבעתיים.',
+    tags:['Nano Banana','סקצ\'אפ','תהליך','גבעתיים'],
+    status:'<strong>מתודולוגיה בפיתוח · מקרה לימוד גבעתיים</strong> — שני מגדלי משרדים 43 קומות עם מסד מסחרי משותף. הצלחנו בחלק מהחלופות (ברוטליסטית ~80%, אופקית ~75%). פרופורציות מדויקות עדיין לא נפתרו. הפתרון העתידי: Veras (תוסף סקצ\'אפ) או ControlNet.',
+    intro:'תרחיש: יש לך מודל נפחי בסקצ\'אפ ואתה רוצה הדמיה ראשונה. התהליך משלב את כל העקרונות — לימוד לפני ביצוע, רפרנסים מובחנים, אנקרים גיאומטריים.\n\nהמקרה לדוגמה בכל השלבים: מתחם כורזין בגבעתיים — שני מגדלי משרדים 43 קומות, מסד מסחרי 15 מטר. הפרומפטים מוכנים — צריך להחליף את ה[משתנים] לפי הפרויקט שלך.',
+    learnFirst:{
+      title:'תזכורת לפני שמתחילים',
+      body:'התהליך הוא 7 שלבים. 3 שלבים ראשונים הם לימוד בלבד — STOP בסוף כל אחד. רק בשלב 6 מבקשים מהמודל לייצר תמונה. אל תקצר את התהליך — קיצור = תוצאה גרועה.',
+      stop:'Steps 3-5 are LEARNING ONLY. Do NOT generate until step 6.'
+    },
+    steps:[
+      {title:'שלב 1 — הכן את סקצ\'אפ',
+       desc:'מצלמה בגובה עיניים (1.6מ\'), זווית אלכסונית (לא חזיתית), שמור שני מבטים: מבט רחוב + מבט-על. ודא קוד צבעים תקין לכל האלמנטים.',
+       path:['סקצ\'אפ','מצלמה 1.6מ\'','זווית אלכסונית','שמור 2 מבטים'],
+       img:null, imgCap:null,
+       tip:'קוד צבעים מומלץ (מבוסס גבעתיים): סגול כהה = מסחר קומת קרקע, סגול בהיר = מסחר ק\' ראשונה, כחול = מגדלי משרדים, כתום = ריצוף, אדום = שביל אופניים, ירוק = גינון.', tipType:'terra',
+       seeDo:{see:'מודל סקצ\'אפ עם קוד צבעים ויזואלי ברור.',do:'ייצא 2 תמונות PNG ברזולוציה גבוהה — מבט רחוב + מבט-על.'}},
+      {title:'שלב 2 — פתח Nano Banana Pro',
+       desc:'היכנס ל-Google AI Studio. בחר Image Generation → Nano Banana Pro. פתח שיחה חדשה.',
+       path:['aistudio.google.com','Image Generation','Nano Banana Pro','שיחה חדשה'],
+       img:null, imgCap:null,
+       tip:'שיחה חדשה לכל מבט וכל חלופה. אל תנסה לעשות הכל בשיחה אחת.', tipType:'sl',
+       seeDo:{see:'ממשק Google AI Studio עם תיבת קלט.',do:'העלה את שתי תמונות המודל מסקצ\'אפ.'}},
+      {title:'שלב 3 — לימוד המודל (לימוד בלבד)',
+       desc:'העלה את שתי תמונות המודל הנפחי. כתוב פרומפט שמלמד את המודל על קוד הצבעים והפרופורציות. סגור עם STOP — אל תיתן לו לייצר.',
+       path:null, img:null, imgCap:null,
+       tip:'בלי הסבר שהצבעים הם קוד מפה — תקבל בניין סגול/כחול/כתום. ההסבר הזה קריטי.', tipType:'terra',
+       seeDo:{see:'המודל מקבל את התמונות ומחכה להוראות.',do:'הדבק את הפרומפט. ודא ש-STOP בסוף.'},
+       prompts:[{
+         title:'פרומפט שלב 3 — לימוד המודל הנפחי',
+         code:'Study these two massing model images carefully.\n\nMASSING MODEL COLOR CODE:\n- Dark purple: ground floor commercial — 7m height, colonnade 4m, shops ~6m\n- Light purple: first floor commercial\n- Blue: office towers — 43 floors, glass\n- Orange: plaza paving\n- Red: bicycle lane (two-direction)\n- Dark green: landscaping\n- Light green (circles): sunken planters with trees\n\nPROPORTIONS:\n- Ground floor = 7 meters\n- First floor = 4.5 meters\n- Open rooftop frame = 3.5 meters\n- Total podium = ~15 meters\n- Towers = 43 floors × ~4m = ~172 meters\n- Podium:Tower ratio = 1:11\n- A person next to the ground floor column looks very small — the column is ~4x their height\n\nThe colors are a FUNCTIONAL CODE ONLY — NOT real building colors.\nThe building must NOT be any of these colors.\n\n⚠️ STOP. Do NOT generate any image.\nConfirm understanding in text only.\nWait for style instructions.',
+         note:'דוגמת גבעתיים — החלף את הנתונים בפרויקט שלך'
+       }]},
+      {title:'שלב 4 — לימוד הסגנון (לימוד בלבד)',
+       desc:'העלה את הרפרנסים: קומפוזיציה ראשון (תמונת המבט הרצוי), אחר כך רפרנסי סגנון. הגדר ✅/❌ לכל אחד. שוב — STOP בסוף.',
+       path:null, img:null, imgCap:null,
+       tip:'בחלופה הברוטליסטית של גבעתיים השתמשנו בשני רפרנסי בטון חשוף מישראל. באופקית — Campus Irchel Zurich (Gigon Guyer) + חסן ערפה ת"א.', tipType:'sl',
+       seeDo:{see:'המודל קיבל קומפוזיציה + סגנון.',do:'הדבק פרומפט עם ✅/❌ לכל רפרנס. STOP בסוף.'},
+       prompts:[{
+         title:'פרומפט שלב 4 — לימוד הסגנון (דוגמה: חלופה ברוטליסטית)',
+         code:'Study these reference images.\n\nIMAGE 1 (composition reference — previous rendering):\n✅ Take: camera angle, plaza layout, cyclist positions,\n   bicycle lane, pergola, tree positions, podium structure,\n   open rooftop frame appearance\n❌ Do NOT take: facade material, column style, building color\n\nIMAGE 2 ([שם רפרנס סגנון 1 — למשל: Brutalist Tel Aviv]):\n✅ Take: raw concrete texture, massive column character, deep colonnade shadows\n❌ Do NOT take: building height, window placement, surroundings\n\nIMAGE 3 ([שם רפרנס סגנון 2 — למשל: Brutalist Jerusalem]):\n✅ Take: facade rhythm, balcony depth, material weathering\n❌ Do NOT take: building scale, color, orientation\n\nSTYLE BLOCK:\n- Brutalist concrete, raw finish\n- Massive square columns, deep colonnade (4m depth)\n- Heavy facade with deep window recesses\n- Natural concrete color — no paint\n\n⚠️ STOP. Do NOT generate any image.\nConfirm understanding in text only.',
+         note:'החלף שמות רפרנסים ובלוק הסגנון לפי החלופה שלך'
+       }]},
+      {title:'שלב 5 — אישור הבנה (לימוד בלבד)',
+       desc:'אל תעלה כלום. בקש מהמודל לתאר במילים מה הוא רואה. זה חושף אי-הבנות לפני שהן הופכות לתמונה.',
+       path:null, img:null, imgCap:null,
+       tip:'אם המודל מתאר משהו לא נכון — תקן עכשיו. אחרת התמונה תייצא לא נכונה.', tipType:'terra',
+       seeDo:{see:'המודל מתאר מה הוא הבין על הסגנון.',do:'קרא בקפידה. תקן אי-הבנות. עבור הלאה רק כשהכל ברור.'},
+       prompts:[{
+         title:'פרומפט שלב 5 — בקשת אישור',
+         code:'Before generating, describe back to me\nwhat you see in IMAGE 2 ([שם הרפרנס]):\n- Column thickness and character\n- Window size and depth\n- Material texture and color\n- Surface treatment\n\nAnd what you understand about the composition from IMAGE 1:\n- Camera angle and viewpoint\n- Layout of plaza and people\n- Position of buildings in frame\n\nDo NOT generate yet.',
+         note:'תמיד לפני יצירה — בודקים שהמודל מבין נכון'
+       }]},
+      {title:'שלב 6 — ביצוע (סוף סוף)',
+       desc:'אל תעלה כלום. תן פרומפט ביצוע מפורט שמשלב קומפוזיציה (העתק מ-IMAGE 1) + סגנון (מבלוק הסגנון). הוסף הוראות אנטי-טעויות בסוף.',
+       path:null, img:null, imgCap:null,
+       tip:'תמיד לסיים עם הוראות שלילה: NO [צבעי המודל] colors. NO stairs. NO signage. זה מונע טעויות נפוצות.', tipType:'terra',
+       seeDo:{see:'המודל מבין הכל ומחכה להוראת יצירה.',do:'הדבק פרומפט הביצוע. הפעם — Generate now.'},
+       prompts:[{
+         title:'פרומפט שלב 6 — ביצוע (דוגמה: ברוטליסטית גבעתיים)',
+         code:'Generate now.\n\nCOMPOSITION — copy IMAGE 1 exactly:\n✅ Same camera: angled from LEFT side\n✅ Left building: close, large, fills left frame\n✅ Right building: smaller, receding to right\n✅ Plaza in foreground: cyclists, people, trees\n✅ Bicycle lane: red, arrows opposite (← →), 2 cyclists\n✅ Open passage between buildings: sky visible, no ceiling\n\nPODIUM — copy IMAGE 1 structure:\n✅ Exactly 3 levels: ground floor + first floor + open rooftop frame\n✅ Rooftop: beams only, sky visible, plants — NOT enclosed\n\nPROPORTIONS:\n✅ Towers dominate skyline, cut off at top of frame\n✅ Tower:podium ratio follows massing model (1:11)\n\nSTYLE BLOCK:\n- Brutalist concrete, raw finish\n- Massive square columns, deep colonnade (4m depth)\n- Heavy facade with deep window recesses\n- Natural concrete color — no paint\n\nNO [purple, blue, orange, red, green] colors.\nNO stairs. NO signage. NO scaffolding.\nGenerate now.',
+         note:'דוגמה מלאה — גבעתיים, חלופה ברוטליסטית. החלף לפי הצרכים.'
+       }]},
+      {title:'שלב 7 — תיקונים מבוקרים',
+       desc:'אם התמונה יצאה כמעט נכון — שנה דבר אחד או שניים בלבד בכל סבב. אחרי 6-8 סבבי תיקון — פתח שיחה חדשה עם התמונה הטובה ביותר כבסיס.',
+       path:null, img:null, imgCap:null,
+       tip:'בקשה לשנות הרבה בבת אחת = המודל מפרש מחדש הכל. שינוי אחד = שליטה.', tipType:'sl',
+       seeDo:{see:'תמונה כמעט מושלמת עם 1-2 בעיות נקודתיות.',do:'בקש שינוי כירורגי. אחרי 6-8 סבבים — שיחה חדשה.'},
+       prompts:[{
+         title:'פרומפט שלב 7 — תיקון כירורגי',
+         code:'Use last image as base.\nChange [X] things only:\n\n1. [אלמנט]: Currently [מה קורה]. Should be [מה צריך].\n2. [אלמנט]: Currently [מה קורה]. Should be [מה צריך].\n\nDo not change anything else at all.',
+         note:'מקסימום 2 שינויים בכל סבב. החלף את [המשתנים] בבעיות הספציפיות.'
+       }]},
+    ]
+  },
+  'nb-alternatives':{
+    title:'חלופות עיצוב — אותו מבט, סגנונות שונים',
+    subtitle:'איך להפיק כמה חלופות סגנוניות לאותה קומפוזיציה ולשמור על השוואתיות.',
+    tags:['Nano Banana','חלופות','גבעתיים'],
+    status:'<strong>מתודולוגיה בפיתוח</strong> — עקביות מלאה בין חלופות עדיין לא מושגת ב-Nano Banana. גם עם השיטה הזו, הקומפוזיציה משתנה במקצת בין חלופה לחלופה. הפתרון העתידי: ControlNet עם depth map מהמודל הנפחי.',
+    intro:'תרחיש: יש לך מבט מאושר בסגנון אחד, ואתה רוצה את אותו מבט בשניים-שלושה סגנונות נוספים — להציג ללקוח השוואת חלופות.\n\nהאתגר: לא ניתן להשתמש בהדמיה הקיימת כבסיס לחלופה חדשה — היא "מזהמת" את הסגנון החדש. הפתרון: שיחה חדשה לכל חלופה, ולחזור על שלבים 3-6 בדיוק — רק בלוק הסגנון משתנה.\n\nבמתחם כורזין הפקנו 3 חלופות: ברוטליסטית (~80% דיוק), אופקית (~75%), ורציפה (בעבודה). כל אחת בשיחה נפרדת.',
+    learnFirst:{
+      title:'הכלל הקריטי — שיחה חדשה לכל חלופה',
+      body:'אל תנסה לבקש מהמודל "להראות את זה בסגנון אחר". הוא ינסה לעשות שינוי כירורגי וייצר תוצאה מבולגנת.\n\nהדרך הנכונה: שמור את ההדמיה הטובה כתמונת COMPOSITION. פתח שיחה חדשה. עבור שוב על שלבים 3-6 — אבל הפעם עם רפרנסי הסגנון החדשים.',
+      stop:'New chat for each alternative. Composition stays — style block changes.'
+    },
+    steps:[
+      {title:'שמור את ההדמיה הראשונה כקומפוזיציה',
+       desc:'אחרי שהפקת חלופה אחת מוצלחת, הורד אותה. זו עכשיו תמונת ה-COMPOSITION reference שלך לכל חלופה הבאה.',
+       path:null, img:null, imgCap:null, tip:null, tipType:null,
+       seeDo:{see:'הדמיה ראשונה מוצלחת (לדוגמה: ברוטליסטית גבעתיים).',do:'הורד את התמונה. שמור בשם ברור: composition_reference.png'}},
+      {title:'פתח שיחה חדשה',
+       desc:'אל תנסה להמשיך באותה שיחה. הסגנון הישן יזהם את החדש — זה כלל ברזל.',
+       path:['Google AI Studio','New chat'],
+       img:null, imgCap:null,
+       tip:'אם תנסה להמשיך באותה שיחה, המודל יערב את שני הסגנונות. השיחה החדשה היא לא בזבוז זמן — היא הכרחית.', tipType:'terra',
+       seeDo:{see:'שיחה ריקה.',do:'התחל מחדש: שלב 3 — לימוד המודל הנפחי.'}},
+      {title:'חזור על שלבים 3-6 — אותו תוכן, סגנון חדש',
+       desc:'שלבי לימוד המודל הנפחי (3) ואישור ההבנה (5) נשארים זהים. בשלב 4 — החלף את רפרנסי הסגנון. בשלב 6 — עדכן רק את בלוק הסגנון בפרומפט.',
+       path:null, img:null, imgCap:null,
+       tip:'דוגמת גבעתיים — חלופה אופקית: רפרנסים: Campus Irchel Zurich + חסן ערפה. בלוק סגנון: טיח בז\' נייטרלי, עמודים עגולים דקים, חלונות סרט אופקיים.', tipType:'sl',
+       seeDo:{see:'אותה קומפוזיציה, אותו מודל נפחי, סגנון חדש.',do:'הקפד שתמונת ה-COMPOSITION מהחלופה הקודמת היא IMAGE 1.'},
+       prompts:[{
+         title:'תבנית — בלוק סגנון לחלופה (דוגמה: אופקית גבעתיים)',
+         code:'STYLE BLOCK:\n- Light beige plaster facade, neutral tone\n- Thin round columns, slender proportions\n- Horizontal ribbon windows (continuous bands)\n- Clean, smooth surfaces — no texture\n- Subtle shadow lines between floors\n\nReference influence:\n- IMAGE 2 (Campus Irchel, Zurich — Gigon Guyer): facade rhythm and column character\n- IMAGE 3 ([Hassan Arafa, Tel Aviv]): horizontal articulation and proportion',
+         note:'החלף את בלוק הסגנון לחלופה שלך. הקומפוזיציה תישאר זהה.'
+       }]},
+    ]
+  },
+  'tripo-img3d':{
+    title:'תמונה לתלת-מימד',
+    subtitle:'יצירת Mesh מפורט מתמונה — הכי חזק בשוק, עם מגבלות שחשוב להכיר.',
+    tags:['Tripo','תמונה','Mesh'],
+    intro:'Tripo הוא הכלי החזק ביותר כיום להמרת תמונה למודל תלת-מימד. חשוב להבין מה הוא נותן ומה לא.\n\nהמודל שמוצא הוא Mesh — רשת משולשים שממדלת את החוץ בלבד. חתך במודל יגלה מסה מלאה ללא פנים. זה צפוי — Tripo מבוסס על מה שרואים בתמונה.\n\nמגבלת עריכה: ההמלצה היא להגיע עם רפרנס מוכן וברור מראש, ולא לנסות לפתח עיצוב בתוך הכלי. Segmentation נותן שליטה חלקית על שכבות, אבל שינוי גדול של חלק מסוים יוציא תוצאה לא עקבית.\n\nלתכנית דו-מימדית — Tripo לא מתאים, הוא לא קורא תכניות היטב. לדירות ועיצוב פנים כדאי לבדוק את Coohom. לפרויקטים גדולים — Claude עם Polysurfaces הוא הדרך.',
+    steps:[
+      {title:'כניסה לTripo',
+       desc:'עבור לtripo3d.ai. התחבר. בחר "Create" → "3D from Image".',
+       path:['tripo3d.ai','Create','3D from Image'],
+       img:'tripo_interface', imgCap:'Tripo — ממשק יצירה',
+       tip:'מנוי Pro מומלץ — תוצאות גבוהות יותר ומהירות.',tipType:'terra',
+       seeDo:{see:'ממשק יצירה עם כפתור העלאה.',do:'לחץ "Upload Image".'},
+       code:null},
+      {title:'העלה תמונה',
+       desc:'גרור את התמונה לאזור ההעלאה, או לחץ לבחירה. תמונה נקייה = תוצר טוב יותר.',
+       path:['גרור תמונה / לחץ Upload'],
+       img:'tripo_demo', imgCap:'תמונת קלט — חזית מבנה מלאה',
+       tip:'תמונות עם מספר זוויות — תוצאה טובה יותר. עצים וכלי רכב מסתירים = בעיה.',tipType:'terra',
+       seeDo:{see:'תצוגה מקדימה של התמונה.',do:'בחר רמת פירוט ← Generate.'},
+       code:null},
+      {title:'הגדר רמת פירוט וייצר',
+       desc:'בחר "High Detail" לתוצאה איכותית. לחץ "Generate". המתן 1-3 דקות.',
+       path:['High Detail','Generate'],
+       img:null, imgCap:null,
+       tip:'Extreme-High = איכות גבוהה, עולה יותר קרדיטים. High מספיק לרוב הצרכים.',tipType:'sl',
+       seeDo:{see:'מד התקדמות.',do:'המתן עד שהמודל מוכן.'},
+       code:null},
+      {title:'ייצא לRhino או לSketchUp',
+       desc:'לחץ Export. בחר OBJ. ב-Rhino: File → Import. ב-SketchUp: File → Import, ובחר OBJ. לקבצים כבדים מדי ב-SketchUp — Transmutr מפשט לפני הייבוא.',
+       path:['Export','OBJ','Rhino: File → Import / SketchUp: File → Import'],
+       img:'tripo_rhino_export', imgCap:'ייצוא OBJ מ-Tripo',
+       tip:'המודל ב-SketchUp מגיע כ-Mesh — עריכה גיאומטרית מוגבלת. Segmentation ב-Tripo לפני הייצוא נותן שליטה חלקית על שכבות בנפרד.',tipType:'sl',
+       seeDo:{see:'כפתור Export עם אפשרויות פורמט.',do:'בחר OBJ ← Download.'},
+       code:null},
+    ]
+  },
+  'rodin-3dto3d':{
+    title:'3D to 3D — מסות למודל מפורט',
+    subtitle:'מסות קיימות מ-Rhino או SketchUp הופכות למודל אדריכלי מפורט באותו נפח.',
+    tags:['Rodin','3D to 3D','Voxel ControlNet'],
+    intro:'Rodin (Hyper3D) פותר בעיה ספציפית: יש כבר סידור מסות בפרויקט — גבולות קו בניין, גבהים, תפוסות — ורוצים לפתח חלופה עיצובית שממלאת את אותו נפח בפרטים אדריכליים (חזיתות, חלונות, מרקמים) מבלי לשנות את הנפח.\n\nחשוב לדעת: המודל שמוצא מ-Rodin לא יוצא במידות נכונות — אבל כן יוצא בפרופורציות נכונות. כלומר, אם הבניין שלך גבוה פי שניים מהרוחב, זה ישמר. אבל לא ניתן להסתמך על מידות בפועל.\n\nלוגיקת הרפרנס: הפתרון הנכון הוא להגיע מוכן עם רפרנס ויזואלי ברור — לא לנסות להסביר בפרומפט מה רוצים. Rodin צריך לראות תמונה שמראה לו את הסגנון, החומרים, רמת הפירוט. Nano Banana הוא הדרך הטובה ביותר להכין רפרנס כזה — מחלצים ממנו איזומטרי נקי של הסגנון הרצוי ומכניסים אותו כרפרנס לRodin.',
+    steps:[
+      {title:'כנס לRodin — Voxel ControlNet',
+       desc:'עבור לhyper3d.ai. בחר "Rodin" → לשונית "3D" → "Voxel ControlNet".',
+       path:['hyper3d.ai','Rodin','3D','Voxel ControlNet'],
+       img:'rodin_home', imgCap:'Rodin — ממשק הבית',
+       tip:null, tipType:null,
+       seeDo:{see:'ממשק עם אפשרויות יצירה.',do:'בחר Voxel ControlNet.'},
+       code:null},
+      {title:'העלה מודל OBJ/FBX',
+       desc:'בחר "Upload Model". ייצא קודם מRhino/SketchUp כ-OBJ. העלה.',
+       path:['Upload Model','OBJ / FBX'],
+       img:'rodin_upload', imgCap:'העלאת מודל — תצוגה מקדימה',
+       tip:'הייצא מRhino: File → Export Selected → OBJ. ב-SketchUp: File → Export → 3D Model.',tipType:'sl',
+       seeDo:{see:'תצוגה מקדימה של המודל.',do:'אשר ← המשך.'},
+       code:null},
+      {title:'הוסף רפרנס תמונה',
+       desc:'הוסף תמונת הדמיה כרפרנס. חשוב: הרפרנס צריך להתאים לסקייל המבנה.',
+       path:['Add Reference Image'],
+       img:'rodin_sculpt', imgCap:'רפרנס + מודל — Nano Banana מומלץ כרפרנס',
+       tip:'הכן רפרנס עם Nano Banana — הכנס איזומטרי של פרט/מבנה בסגנון הרצוי.',tipType:'terra',
+       seeDo:{see:'אפשרות להוסיף תמונת רפרנס.',do:'גרור רפרנס ← אשר.'},
+       code:null},
+      {title:'בחר איכות ויצר',
+       desc:'בחר "High" לפחות — Low ו-Medium לא מניבים תוצאה נקייה. לחץ Generate.',
+       path:['Quality → High / Extreme','Generate'],
+       img:'rodin_quality', imgCap:'Gen-2.5 — רמות איכות: High מינימום',
+       tip:null, tipType:null,
+       seeDo:{see:'בחירת רמת איכות.',do:'בחר High ← Generate.'},
+       code:null},
+    ]
+  },
+  'rodin-texture':{
+    title:'ייבוא טקסטורות PBR לRhino ולSketchUp',
+    subtitle:'הטקסטורות מגיעות בנפרד — כך מחברים אותן נכון לכל תוכנה.',
+    tags:['Rodin','PBR','Rhino','SketchUp'],
+    intro:'כשמורידים מודל מ-Rodin, הטקסטורות מגיעות בתיקייה נפרדת — שלושה קבצים: texture_diffuse (צבע), texture_metallic (מתכתיות), texture_roughness (גסות).\n\nב-Rhino: מחברים את שלושת הטקסטורות כ-Physically Based Material — זה הפורמט הנכון לרינדור מלא ב-V-Ray או ב-Enscape.\n\nב-SketchUp: המצב שונה — SketchUp לא תומך ב-PBR מלא. מחברים רק את ה-diffuse כחומר רגיל. לרינדור איכותי עם כל הטקסטורות, צריך V-Ray for SketchUp שכן תומך PBR — אבל זה שלב נפרד.',
+    steps:[
+      {title:'הורד ופתח את תיקיית הטקסטורות',
+       desc:'לאחר ייצוא מRodin — בתיקייה יהיו קבצי PNG: texture_diffuse, texture_metallic, texture_roughness.',
+       path:['תיקיית הורדה','טקסטורות'],
+       img:'rodin_material', imgCap:'תיקיית טקסטורות — diffuse, metallic, roughness',
+       tip:null, tipType:null,
+       seeDo:{see:'תיקייה עם מספר קבצי PNG.',do:'זהה: diffuse = צבע, metallic = מתכתיות, roughness = גסות.'},
+       code:null},
+      {title:'Rhino — Materials Panel',
+       desc:'פתח Rhino. בחר אובייקט. לחץ Properties → Material. בחר "Physically Based".',
+       path:['Properties','Material','Physically Based'],
+       img:'rodin_rhino3', imgCap:'Rhino — Physically Based Material',
+       tip:null, tipType:null,
+       seeDo:{see:'חלונית Material עם אפשרויות.',do:'בחר Physically Based.'},
+       code:null},
+      {title:'Rhino — חבר את שלוש הטקסטורות',
+       desc:'לחץ על כל שדה (Color, Metallic, Roughness) וחבר את הקובץ המתאים.',
+       path:['Color ← diffuse','Metallic ← metallic','Roughness ← roughness'],
+       img:'rodin_rhino4', imgCap:'Rhino — חיבור PBR: diffuse, metallic, roughness',
+       tip:'Normal Map אופציונלי — מוסיף תחושת עומק לחזית.',tipType:'sl',
+       seeDo:{see:'שלושה שדות ריקים.',do:'חבר קובץ לכל שדה ← OK.'},
+       code:null},
+      {title:'SketchUp — רק Diffuse',
+       desc:'Window → Materials → Create New Material → Texture image → בחר diffuse. גרור על המודל.',
+       path:['Window','Materials','Create New Material','Texture image → diffuse','גרור על מודל'],
+       img:'rodin_rhino5', imgCap:'SketchUp — Material עם texture_diffuse',
+       tip:'SketchUp לא תומך PBR מלא — רק Diffuse. לרינדור מלא עבר לV-Ray.',tipType:'sl',
+       seeDo:{see:'חלונית Materials.',do:'צור חומר חדש ← גרור על המודל.'},
+       code:null},
+    ]
+  },
+  'coohom-fp':{
+    title:'תכנית דו-מימדית לתלת-מימד',
+    subtitle:'מתכנית דירה — מודל מרוהט עם רינדור. מתאים לעיצוב פנים בלבד.',
+    tags:['Coohom','עיצוב פנים','2D'],
+    intro:'Coohom מתאים לעיצוב פנים של דירות ומרחבי מגורים. מייבאים תכנית דו-מימדית ובמספר שלבים מקבלים מודל מרוהט עם רינדור.\n\nחשוב להגדיר את הציפיות: Coohom עובד ברמת שרטוט של דירה. הוא לא מתאים לפרויקטים אדריכליים גדולים, ובניינים, תכניות עירוניות — שם הכלים הנכונים הם Rhino, Revit, או Claude עם Polysurfaces. מבחינת יכולות, הרמה דומה למידול ישיר מ-Revit — ולכן לא בהכרח יתרון על הקיים למי שכבר עובד ב-Revit.',
+    steps:[
+      {title:'כניסה ויצירת פרויקט',
+       desc:'עבור לcoohom.com. צור חשבון חינמי. לחץ "Create New Design".',
+       path:['coohom.com','Create New Design'],
+       img:'planner_coohom', imgCap:'Coohom — מסך הבית',
+       tip:null, tipType:null,
+       seeDo:{see:'מסך בחירת תבנית.',do:'בחר "Draw Floor Plan" → Import Image.'},
+       code:null},
+      {title:'ייבוא תכנית',
+       desc:'לחץ "Import Floor Plan Image". בחר PNG/JPG של התכנית. הגדר סקייל.',
+       path:['Import Floor Plan Image','בחר קובץ','הגדר סקייל'],
+       img:'coohom_upload', imgCap:'ייבוא תכנית — הגדרת סקייל',
+       tip:'דייק את הסקייל — זה קריטי לפרופורציות הסופיות.',tipType:'terra',
+       seeDo:{see:'תמונת התכנית בממשק.',do:'הגדר סקייל לפי מידה ידועה ← אשר.'},
+       code:null},
+      {title:'ייצור אוטומטי → 3D',
+       desc:'לחץ "Auto Generate 3D". Coohom יזהה קירות ויצור מודל תלת-מימד.',
+       path:['Auto Generate 3D'],
+       img:'coohom_3d', imgCap:'מודל 3D אוטומטי מתכנית',
+       tip:null, tipType:null,
+       seeDo:{see:'מעבר אוטומטי לתצוגה תלת-מימדית.',do:'בדוק קירות ← תקן שגיאות.'},
+       code:null},
+    ]
+  },
+  'arcgis-overview':{
+    title:'סקירה כללית — שלושת עמודי ה-AI ב-ArcGIS',
+    subtitle:'GeoAI, AI Assistants, ו-AI Agents — איך הם משלימים זה את זה.',
+    tags:['ArcGIS','Esri','AI','מבוא'],
+    intro:'Esri (יצרנית ArcGIS) פיתחה גישת AI מובנית לפלטפורמה — לא תוסף חיצוני אלא שכבה אינטגרלית. השינוי אינו תיאורטי: AI כבר מוטמע בכלים הקיימים.\n\nשלושה מסלולים מקבילים, כל אחד פותר בעיה שונה:\n\nGeoAI — חילוץ ידע מנתונים גיאוגרפיים. מודלים מאומנים מראש שמזהים אובייקטים בתמונות אוויר, מסווגים שכבות, ומנתחים שינויים. לא דורשים אימון עצמי.\n\nAI Assistants — עוזרים חכמים בתוך הממשק. שאילתות בעברית טבעית, ביצוע פעולות מורכבות ללא ידיעת תפריטים. מנמיך את חסם הכניסה למשרד כולו.\n\nAI Agents — סוכנים עצמאיים שמבצעים תהליכי GIS שלמים. מתחבר ל-Claude ומודלי שפה אחרים דרך MCP — נקודת ההפגשה החשובה ביותר עבור המשרד.\n\nבעבודה במשרד: כל שלושה רלוונטיים. GeoAI לניתוחי שטח (זיהוי בניינים, פנלים סולאריים, צמחייה). Assistants להאצת תפעול שוטף. Agents/MCP לבניית תהליכים מותאמים שמשלבים נתוני GIS עם שיח עם Claude.',
+    steps:[
+      {title:'הבן את שלושת המסלולים',
+       desc:'GeoAI = מודלים. Assistants = שיח עם הממשק. Agents = סוכנים עצמאיים. לכל אחד מקרי שימוש שונים.',
+       path:null,
+       img:'arcgis_02', imgCap:'שלושת עמודי ה-AI',
+       tip:'התחל מ-Assistants — קל ביותר להטמעה, החזר ערך מיידי לצוות.', tipType:'terra',
+       seeDo:{see:'דיאגרמת שלוש העמודות.',do:'זהה איזה עמוד פותר את הבעיה שלך כרגע.'},
+       code:null},
+      {title:'בדוק זמינות במנוי המשרד',
+       desc:'חלק מהיכולות בבטא/Preview 2026. בקש מאיש GIS לבדוק מה זמין בארגון.',
+       path:['ArcGIS Online','הגדרות ארגון','AI Settings'],
+       img:'arcgis_19', imgCap:'Esri Early Adopter Community',
+       tip:'earlyadopter.esri.com — חשבון ארגוני נדרש. שווה להירשם גם אם לא משתמשים מיד.', tipType:'sl',
+       seeDo:{see:'רשימת גרסאות בטא זמינות.',do:'בדוק זכאות עם איש המערכת.'},
+       code:null},
+    ]
+  },
+  'arcgis-geoai':{
+    title:'GeoAI — מודלים מאומנים מ-Living Atlas',
+    subtitle:'איך להריץ מודל AI מוכן על נתוני שטח, ללא אימון עצמי.',
+    tags:['ArcGIS','GeoAI','Living Atlas'],
+    intro:'Living Atlas של Esri הוא מאגר גלובלי של מעל 100 מודלי AI מאומנים מראש — לזיהוי בניינים, פנלים סולאריים, צמחייה, חלונות ודלתות, ועוד.\n\nהיתרון העיקרי: לא צריך לאסוף נתוני אימון, לתייג אותם, להריץ אימון, או להחזיק GPU. המודלים מוכנים — מפעילים אותם על השכבה שלך ומקבלים תוצאה.\n\nשתי דרכי הרצה: ArcGIS Online (בענן, ללא חומרה — אך עולה קרדיטים), או ArcGIS Pro (מקומית, דורש GPU עם 8GB VRAM לפחות, אך ללא עלות נוספת לכל הרצה).\n\nחשוב לבדוק את ההתאמה הגיאוגרפית: מודלים שאומנו על תמונות אוויר מארה"ב לא בהכרח יעבדו טוב בישראל. כל מודל מתועד עם האזור הגיאוגרפי שאליו הוא מותאם.',
+    steps:[
+      {title:'גש ל-Living Atlas',
+       desc:'מ-ArcGIS Online או ArcGIS Pro — חפש "Living Atlas". סנן לפי "Pre-trained Models".',
+       path:['ArcGIS Online','Content','Living Atlas','Pre-trained Models'],
+       img:'arcgis_10', imgCap:'Living Atlas — מאגר המודלים',
+       tip:'חיפוש לפי תחום הענין: "solar panels", "buildings", "trees". בדוק תיעוד גיאוגרפי לפני שימוש.', tipType:'terra',
+       seeDo:{see:'רשימת מודלים זמינים עם תיאור.',do:'בחר מודל ← קרא דרישות נתונים ואזור גיאוגרפי.'},
+       code:null},
+      {title:'בדוק התאמה לפרויקט',
+       desc:'כל מודל דורש סוג נתונים מסוים: תמונת אוויר ברזולוציה X, ליידאר, תמונת לווין. ודא שיש לך את הקלט הנכון.',
+       path:null,
+       img:'arcgis_07', imgCap:'דוגמה: Solar Panel Detection — Drone 5-15cm, ארה"ב',
+       tip:'אם המודל מותאם לארה"ב והעבודה בישראל — שווה לבדוק על דגימה קטנה לפני הרצה גדולה.', tipType:'sl',
+       seeDo:{see:'מפרט המודל: סוג קלט, רזולוציה, אזור.',do:'הכן שכבת רסטר תואמת.'},
+       code:null},
+      {title:'הרץ — ArcGIS Online',
+       desc:'Analysis Tools → Use Deep Learning. הצמד את המודל לשכבת הקלט. הפעל.',
+       path:['Analysis Tools','Use Deep Learning','Select Model','Run'],
+       img:'arcgis_09', imgCap:'Analysis Tools ב-ArcGIS Online',
+       tip:'הרצה עולה קרדיטים — לפי שטח ורזולוציה. בקש הערכה לפני הרצה על פרויקט גדול.', tipType:'terra',
+       seeDo:{see:'דיאלוג בחירת מודל וקלט.',do:'הצמד שכבה ← Run ← המתן.'},
+       code:null},
+      {title:'דוגמה מעשית — חלונות בבניין',
+       desc:'מודל "Esri Windows and Doors" על מודל תלת-מימד של עיר. Confidence: 0.5. פלט: Bounding Boxes על כל חלון.',
+       path:['ArcGIS Pro','Object Detection','Esri Windows and Doors'],
+       img:'arcgis_15', imgCap:'הגדרת מודל זיהוי חלונות',
+       tip:'יישומים אדריכליים: מלאי בניינים לשיפוצים, ספירת פתחים בתב"ע, ניתוח חזיתות.', tipType:'sg',
+       seeDo:{see:'מודל תלת-מימד של בניין.',do:'הגדר Confidence ← Symbology ← Run.'},
+       code:null},
+    ]
+  },
+  'arcgis-assistant':{
+    title:'AI Assistant — שאילתות בשפה טבעית',
+    subtitle:'הפעלת ArcGIS Pro בעברית — שכבות, ניתוחים, ופעולות ללא ידיעת תפריטים.',
+    tags:['ArcGIS Pro','AI Assistant','עברית'],
+    status:'<strong>גרסת בטא — Preview 2026</strong>. גרסה מלאה צפויה במהלך 2026. דורש חשבון ארגוני והרשמה ל-Early Adopter Community.',
+    intro:'AI Assistant של ArcGIS Pro מאפשר תפעול בשפה טבעית, כולל עברית מלאה. במקום לחפש בתפריטים, שואלים שאלה ומקבלים תשובה — או פעולה מבוצעת.\n\nשלוש יכולות עיקריות שמשנות את חוויית העבודה: הבנה מבוססת על תיעוד פנימי (האסיסטנט יודע מה כל שכבה מייצגת לפי ה-Metadata שלה), ביצוע פעולות במהירות (הדלקת/כיבוי שכבות, ניתוחים), ופתרון בעיות (הסבר על שגיאות, הצעת פתרונות).\n\nההשפעה למשרד: עובדים שלא ידעו GIS לעומק יכולים להתחיל לעבוד מיידית. ידע בארגון מועבר מאיש לאיש דרך התיעוד — ואז ה-Assistant נגיש לכולם.\n\nתלות מרכזית: איכות ה-Metadata. בלי תיאור ברור של השכבות, ה-Assistant לא יבין מה הן. ראה מדריך "AI-Ready ArcGIS — הכנת Metadata".',
+    steps:[
+      {title:'הירשם ל-Early Adopter',
+       desc:'עבור ל-earlyadopter.esri.com. הירשם עם חשבון ארגוני. בקש גישה ל-ArcGIS Pro Assistant.',
+       path:['earlyadopter.esri.com','חשבון ארגוני','ArcGIS Pro Assistant'],
+       img:'arcgis_19', imgCap:'Esri Early Adopter Community',
+       tip:'גם אם לא תשתמש מיד — שווה להירשם. תקבל עדכונים כשהגרסה תיפתח.', tipType:'sl',
+       seeDo:{see:'רשימת גרסאות בטא.',do:'אשר תנאי שימוש ← בחר Pro Assistant.'},
+       code:null},
+      {title:'פתח את ה-Assistant ב-Pro',
+       desc:'ב-ArcGIS Pro, פתח את חלונית ה-Assistant. בדרך כלל בצד הימני, סמל של בועת דיבור.',
+       path:['ArcGIS Pro','View','AI Assistant'],
+       img:'arcgis_21', imgCap:'Assistant Beta — שאילתה בעברית',
+       tip:null, tipType:null,
+       seeDo:{see:'תיבת שיחה ריקה עם הצעות לשאלות לדוגמה.',do:'התחל בשאלת זיהוי שכבה: "מה השכבה ל..."'},
+       code:null},
+      {title:'שאל בעברית — שאילתות שכבה',
+       desc:'דוגמה: "מהי השכבה שמתאימה לתחנות הדלק?". ה-Assistant יזהה את השכבה לפי שם וMetadata.',
+       path:null,
+       img:'arcgis_22', imgCap:'תוצאה: שכבת is_gas מוצגת',
+       tip:'אם השכבה לא מוצאת — הבעיה ב-Metadata. ראה מדריך הכנת נתונים.', tipType:'terra',
+       seeDo:{see:'מפת ישראל עם שכבת תחנות דלק מוצגת.',do:'אמת את התוצאה — האם זו השכבה הנכונה?'},
+       code:null},
+      {title:'בקש פעולות',
+       desc:'"כבה את כל השכבות הפוליגוניות". ה-Assistant יזהה ויסנן. גם פעולות מורכבות יותר — בעיקר ניתוחים מרחביים.',
+       path:null,
+       img:'arcgis_23', imgCap:'Geoprocessing Assistant — ניתוח שלב אחר שלב',
+       tip:'תמיד אמת את התוצאה. ה-Assistant יכול לטעות — במיוחד בניתוחים מורכבים. בדוק שכבה מוצגת נכונה ומספר רשומות.', tipType:'terra',
+       seeDo:{see:'רשימת פעולות שבוצעו עם תוצאה לכל אחת.',do:'בדוק כל פעולה ← אמת תוצאה.'},
+       code:null},
+    ]
+  },
+  'arcgis-metadata':{
+    title:'AI-Ready ArcGIS — הכנת Metadata',
+    subtitle:'בלי Metadata איכותי, ה-AI לא יבין את הנתונים שלך. כך מכינים נכון.',
+    tags:['ArcGIS','Metadata','Dublin Core'],
+    intro:'הכלל המרכזי שמרצה הכנס הבליט: AI לא יודע לקרוא נתונים — הוא קורא תיאורים. כשהאסיסטנט מחפש "שכבת תחנות דלק", הוא לא בודק את הנתונים עצמם — הוא בודק את ה-Metadata.\n\nארבעה ממדים שבהם Metadata עוזר: Findability (מציאת המידע הנכון), Trust (אמינות — מקור, תאריך, מגבלות), Governance (ניהול ארגוני), ו-AI Readiness (יכולת ה-AI לפרש ולהפיק תובנות).\n\nהסטנדרט המומלץ: Dublin Core+. הוא תומך בכל השדות שה-AI צריך — שם, תיאור, מילות מפתח, קטגוריה, מקור, אזור גיאוגרפי, ועוד.\n\nרכיב חשוב נוסף: Embeddings. אלה ייצוגים מתמטיים של הנתונים שמאפשרים חיפוש סמנטי — לפי כוונה, לא מילות מפתח. זה מה שמאפשר ל-AI להבין ש"אזור מסחרי" ו"שטח קמעונאות" מתייחסים לאותו דבר.\n\nתובנה מעשית: במשרד, כדי שה-AI יעבוד טוב — צריך השקעה חד-פעמית בכתיבת Metadata. אחר כך זה משלם את עצמו לאורך זמן.',
+    steps:[
+      {title:'הגדר Metadata Style — Dublin Core+',
+       desc:'ב-ArcGIS Online: Organization Settings → Items → Metadata. בחר Dublin Core+.',
+       path:['ArcGIS Online','Organization','Items','Metadata Style','Dublin Core+'],
+       img:'arcgis_34', imgCap:'Dublin Core Metadata Style',
+       tip:'הגדרה ברמת ארגון — חלה על כל הפריטים החדשים. שכבות קיימות לא יעודכנו אוטומטית.', tipType:'sl',
+       seeDo:{see:'רשימת Metadata Styles.',do:'בחר Dublin Core+ ← Save.'},
+       code:null},
+      {title:'מלא Metadata לכל שכבה',
+       desc:'לכל שכבה: שם ברור (עברית), תיאור (מה זה, מי יצר, מתי), מילות מפתח, קטגוריה, אזור גיאוגרפי.',
+       path:null,
+       img:'arcgis_35', imgCap:'מיפוי שמות עבריים לטכניים',
+       tip:'דוגמה: שדה WrkY_pcrn יקבל תיאור "אחוז עובדים בגיל 15+". האסיסטנט יזהה גם בעברית וגם באנגלית.', tipType:'terra',
+       seeDo:{see:'דיאלוג Metadata של פריט.',do:'מלא כל שדה ← בעברית בולטת ← Save.'},
+       code:null},
+      {title:'הוסף תיאור לשדות',
+       desc:'לא רק לשכבה — גם לכל שדה בטבלת Attributes. שם השדה לרוב מקוצר. התיאור הוא מה שה-AI יקרא.',
+       path:['Layer Properties','Fields','Alias / Description'],
+       img:null, imgCap:null,
+       tip:'השקעת חצי שעה לכל שכבה משמעותית. אחר כך — כל שאילתה בעברית עובדת.', tipType:'terra',
+       seeDo:{see:'רשימת שדות עם שמות טכניים.',do:'הוסף Alias בעברית לכל שדה רלוונטי.'},
+       code:null},
+      {title:'בדוק עם ה-Assistant',
+       desc:'אחרי עדכון Metadata, שאל את ה-Assistant על השכבה בעברית. אם הוא מוצא — סימן שעבד.',
+       path:null,
+       img:'arcgis_21', imgCap:'Assistant מזהה שכבה לפי Metadata',
+       tip:null, tipType:null,
+       seeDo:{see:'תשובה של ה-Assistant.',do:'אם לא מצא ← חזור ל-Metadata ← הוסף מילות מפתח.'},
+       code:null},
+    ]
+  },
+  'arcgis-mcp':{
+    title:'חיבור Claude ל-ArcGIS דרך MCP',
+    subtitle:'איך לחבר את קלוד דסקטופ לנתוני GIS ולפעולות מרחביות.',
+    tags:['ArcGIS','MCP','Claude','Agents'],
+    status:'<strong>גרסה 12.2 — צפויה נובמבר 2026</strong>. כרגע בבטא. דורש Claude Desktop + חשבון ArcGIS עם הרשאות API.',
+    intro:'MCP (Model Context Protocol) הוא הפרוטוקול של Anthropic לחיבור מודלי שפה למערכות חיצוניות. Esri שילבה MCP ב-ArcGIS — וזה אומר שניתן לחבר את Claude ישירות לנתוני GIS.\n\nשני סוגי MCP זמינים: Location Services MCP (שירותי מיקום של Esri — Geocoding, Routing, Elevation, מפות) ו-Enterprise MCP (גישה ל-Feature Layers ו-Geoprocessing הארגוני).\n\nהתוצאה: אפשר לבקש מ-Claude לבצע משימות GIS בשפה טבעית, והוא מבצע אותן בפועל. דוגמאות מהדגמת הכנס: יצירת מפה עם נקודות, חישוב מסלול בין מקומות, ניתוח גובה. כל זה תוך כדי שיחה רגילה עם Claude.\n\nליישום במשרד: זה הפתח לבניית סוכנים מותאמים — תהליכים אדריכליים שמשלבים נתוני שטח, ניתוחים מרחביים, ושיח עם Claude. עדיין מוקדם — אבל זו הכיוון שכדאי לעקוב אחריו.',
+    steps:[
+      {title:'התקן Claude Desktop',
+       desc:'הורד את Claude Desktop מ-claude.ai. נדרש חשבון Anthropic Pro לפחות.',
+       path:['claude.ai','Download','Claude Desktop'],
+       img:null, imgCap:null,
+       tip:'MCP זמין רק ב-Claude Desktop — לא בדפדפן. ודא שגרסת Pro מופעלת.', tipType:'sl',
+       seeDo:{see:'Claude Desktop פתוח.',do:'התחבר לחשבון ← Settings.'},
+       code:null},
+      {title:'פתח הגדרות MCP',
+       desc:'Settings → Developer → Local MCP servers. כאן מוסיפים שרתי MCP חיצוניים.',
+       path:['Claude Desktop','Settings','Developer','Local MCP servers'],
+       img:'arcgis_37', imgCap:'הגדרות MCP ב-Claude Desktop',
+       tip:null, tipType:null,
+       seeDo:{see:'רשימה ריקה של MCP servers.',do:'לחץ Add → הזן פרטים.'},
+       code:null},
+      {title:'הוסף ArcGIS Location Services MCP',
+       desc:'הזן את הפקודה לחיבור Location Services של Esri. נדרש Authorization Token.',
+       path:null,
+       img:'arcgis_37', imgCap:'חיבור Location Services',
+       tip:'AUTH_HEADER מקבלים מ-ArcGIS Online → Developer → API Keys.', tipType:'terra',
+       seeDo:{see:'שדה command + arguments.',do:'הדבק את הפקודה ← Save.'},
+       code:'npx mcp-remote https://glocation-services-mcp.arcgis.com/beta/mcp --header Authorization ${AUTH_HEADER}'},
+      {title:'הוסף Enterprise MCP — אופציונלי',
+       desc:'לגישה לנתוני הארגון (Feature Layers, Geoprocessing). דורש Auth Token של ArcGIS Enterprise.',
+       path:null,
+       img:'arcgis_38', imgCap:'Enterprise MCP',
+       tip:'אם הארגון משתמש ב-ArcGIS Enterprise (לא Online) — זה החיבור שייתן גישה לנתונים הפרטיים.', tipType:'sl',
+       seeDo:{see:'שדה הוספת שרת נוסף.',do:'הדבק פקודה ← הזן Token ← Save.'},
+       code:'npx mcp-remote https://mcpbeta.webgistesting.net/server/platform/mcp --header Authorization ${AUTH_TOKEN}'},
+      {title:'בדוק חיבור — שאל את Claude',
+       desc:'פתח שיחה חדשה ב-Claude Desktop. שאל: "Find the address: רחוב הרצל 1, תל אביב". אם החיבור עובד — Claude יקרא ל-MCP ויחזיר תוצאה.',
+       path:null,
+       img:'arcgis_40', imgCap:'Claude + ArcGIS MCP — הדגמה',
+       tip:'אם לא עובד — בדוק Token, בדוק הרשאות, ובדוק שה-MCP server מופיע ב-Settings → Developer.', tipType:'terra',
+       seeDo:{see:'Claude מציג מפה או מחשב מסלול.',do:'בדוק שהתוצאה הגיונית — אמת מול ArcGIS.'},
+       code:'Find address: רחוב הרצל 1, תל אביב\n\nThen show me a route from there to רחוב יפו 50, ירושלים.'},
+    ]
+  },
+  'comfyui-intro':{
+    title:'מבוא וממשק ComfyUI',
+    subtitle:'Visual Scripting עם שליטה מקסימלית — Nodes, Workflow, הרצה.',
+    tags:['ComfyUI','Visual Scripting','Open Source'],
+    intro:'ComfyUI הוא כלי ה-Visual Scripting עם הרמה הגבוהה ביותר של שליטה. כל תהליך בנוי מ-Nodes (קוביות) שמחוברות בחוטים. פופולרי בקרב אמנים דיגיטליים. דורש התקנה מקומית.',
+    steps:[
+      {title:'הורד והתקן ComfyUI',
+       desc:'GitHub: github.com/comfyanonymous/ComfyUI. הורד ZIP. פרוס. הרץ python main.py.',
+       path:['GitHub → ComfyUI','הורד ZIP','python main.py'],
+       img:'comfyui_interface', imgCap:'ComfyUI — ממשק Nodes',
+       tip:'Windows: עדיף להשתמש ב-ComfyUI Desktop מהאתר הרשמי.',tipType:'sl',
+       seeDo:{see:'ממשק Nodes בדפדפן בlocal.',do:'טען Workflow מוכן ← הרץ.'},
+       code:null},
+    ]
+  },
+  'weavy-intro':{
+    title:'מבוא וממשק Weavy',
+    subtitle:'Visual Scripting נגיש — ספריית Workflows מוכנים, רכישת טוקנים ממקור אחד.',
+    tags:['Weavy','Visual Scripting','Web'],
+    intro:'Weavy הוא הכלי הנגיש ביותר ל-Visual Scripting — web-based, ללא התקנה, עם ספריית Workflows מוכנים שניתן לקחת ולהתאים.\n\nיתרון מרכזי שחשוב להבין: Weavy (וכלים דומים) מאפשרים רכישת טוקנים ממקור אחד ודרך מנוע אחד להפעיל מגוון כלים — במקום לנהל מנויים נפרדים לכל כלי. המגבלה: ניתן להפעיל רק כלים ומודלים שאותה פלטפורמה תומכת בהם.\n\nהערת מודלים: Weavy משתמשת בעיקר במודלים סינים (כגון HiDream ואחרים). הביצועים טובים ומוכרים בשוק — אך לא להכניס מידע רגיש כגון תכניות, נתוני לקוחות, או מסמכים פנימיים. לבדוק כל מודל חדש לפני שימוש ראשון.\n\nאופן קריאת Workflow: משמאל לימין. צומת בסגול = פרומפט. צומת בטורקיז = רפרנס תמונה. כל Battery ממתין להפעלה ידנית — צריך ללחוץ הפעל בכל שלב.',
+    steps:[
+      {title:'כניסה ל-Weavy',
+       desc:'עבור לweavy.ai. צור חשבון. בחר Workflow מהספרייה.',
+       path:['weavy.ai','Library','בחר Workflow'],
+       img:'weavy_home', imgCap:'Weavy — ספריית Workflows',
+       tip:null, tipType:null,
+       seeDo:{see:'ספריית Workflows.',do:'בחר Workflow ← Open.'},
+       code:null},
+      {title:'קרא את ה-Workflow',
+       desc:'קרא משמאל לימין: Input → Process → Output. סגול = פרומפט, טורקיז = רפרנס.',
+       path:[],
+       img:'weavy_workflow', imgCap:'Architecture Angles Workflow — קריאה משמאל לימין',
+       tip:'כל Battery מחכה להפעלה ידנית — לחץ הפעל בכל שלב.',tipType:'terra',
+       seeDo:{see:'Canvas עם Nodes מחוברים.',do:'הרץ Battery ראשון ← המתן ← הרץ הבא.'},
+       code:null},
+    ]
+  },
+  'xfigura-intro':{
+    title:'מבוא וממשק xFigura',
+    subtitle:'Visual Scripting שנבנה עבור אדריכלים — Boards, Nodes, ממשק צוות.',
+    tags:['xFigura','אדריכלות','Canvas'],
+    intro:'xFigura בנוי עבור אדריכלים — החזון שלהם הוא להיות "קורת גג" אחת לתהליכי AI אדריכלי. Boards קיימים מהספרייה: Rhino to Video, 3D Workflow, Facade Module Tower.\n\nהממשק עובד על Canvas: לחיצה כפולה מוסיפה Node, קליק ימני פותח תפריט עריכה. כל Node הוא שלב בתהליך — בוחרים מודל, כותבים פרומפט, מחברים לשלב הבא.\n\nכלי ייחודי לצוות: בצד שמאל של הממשק יש סרגל הערות — ניתן לסמן אזורים על ה-Canvas, להוסיף הערות, ולסמן צורות כלליות. מתאים לתיאום בין אנשי צוות באותו Board.',
+    steps:[
+      {title:'כניסה ובחירת Board',
+       desc:'עבור לxfigura.com. בחר Board קיים מהספרייה או צור Board חדש.',
+       path:['xfigura.com','Boards','בחר / צור'],
+       img:'xfigura_boards', imgCap:'xFigura — Boards: Rhino to Video, 3D Workflow, Facade Module Tower',
+       tip:null, tipType:null,
+       seeDo:{see:'ספריית Boards.',do:'לחץ על Board ← Open.'},
+       code:null},
+      {title:'הוסף Node לCanvas',
+       desc:'על ה-Canvas: לחץ פעמיים שמאלי → בחר סוג Node. חבר ל-Node אחר בקליק וגרירה.',
+       path:['כפל-קליק שמאלי על Canvas','בחר Node','חבר'],
+       img:'xfigura_canvas', imgCap:'xFigura Canvas — הוספת Node וחיבור',
+       tip:'קליק ימני על Canvas לאפשרויות עריכה, Duplicate, Delete.',tipType:'sl',
+       seeDo:{see:'Canvas ריק.',do:'כפל-קליק ← בחר Node ← חבר ל-Output הבא.'},
+       code:null},
+    ]
+  },
+  'weavy-workflow':{
+    title:'שימוש ב-Workflow קיים',
+    subtitle:'Image to 3D: Nano Banana ועוד Rodin ב-Workflow אחד.',
+    tags:['Weavy','Image to 3D','Workflow'],
+    intro:'Visual Scripting מתאים כשהתהליך מובנה ולא משתנה — שלבים ידועים מראש בסדר קבוע. בתוך זה, ניתן לשנות פרטים בכל הרצה: לדייק פרומפט, להחליף תמונת קלט, לשנות פרמטר. מה שלא משתנה הוא מבנה התהליך עצמו.\n\nשלושה יתרונות מרכזיים: חיסכון בזמן על תהליכים חזרתיים, שמירת Workflow כתבנית עבודה לשימוש חוזר — גם לשיתוף עם הצוות, ורכישת טוקנים ממקור אחד במקום ניהול מנויים מרובים.\n\nכשלא כדאי: כשהתהליך דורש שיקול דעת משתנה בכל פרויקט — Workflow יוצר תסכול במקום לחסוך זמן.',
+    steps:[
+      {title:'בחר Workflow "Image to 3D"',
+       desc:'בספריית Weavy, חפש "Image to 3D" → פתח. תראה 3 Batteries בסדרה.',
+       path:['Library','Image to 3D','Open'],
+       img:'weavy_image2_3d', imgCap:'Image to 3D Workflow — Nano Banana + Rodin',
+       tip:null, tipType:null,
+       seeDo:{see:'Canvas עם 3 Batteries.',do:'לחץ על Battery ראשון ← הרץ.'},
+       code:null},
+    ]
+  },
+  'xfigura-canvas':{
+    title:'בניית Canvas מאפס',
+    subtitle:'הרכב Workflow מותאם — מתמונה לתלת-מימד עם Nano Banana ו-Rodin.',
+    tags:['xFigura','Canvas','Workflow'],
+    intro:'בניית Canvas מאפס מאפשרת Workflow מותאם לצרכים הספציפיים של הפרויקט. לדוגמה: תמונת חזית → Nano Banana → מודל איזומטרי → Rodin → 3D.',
+    steps:[
+      {title:'צור Board חדש',
+       desc:'לחץ "New Board" → תן שם → בחר Canvas ריק.',
+       path:['New Board','שם','Canvas ריק'],
+       img:'xfigura_home', imgCap:'xFigura — יצירת Board חדש',
+       tip:null, tipType:null,
+       seeDo:{see:'Canvas ריק.',do:'כפל-קליק ← הוסף Node ראשון.'},
+       code:null},
+      {title:'בחר מודל ל-Node',
+       desc:'בתוך כל Node — בחר מודל (Nano Banana, FLUX Pro, Ideogram). הגדר פרומפט ורפרנס.',
+       path:['Node','Select Model','Nano Banana'],
+       img:'xfigura_model_select', imgCap:'בחירת מודל בתוך Node',
+       tip:'Nano Banana = Imagen 3, חינמי, מצוין לחזיתות. FLUX Pro = איכות גבוהה, בתשלום.',tipType:'terra',
+       seeDo:{see:'רשימת מודלים זמינים.',do:'בחר Nano Banana ← הגדר פרומפט ← חבר.'},
+       code:null},
+    ]
+  },
+};
+
+const LESSONS = [
+  {id:'lesson1', num:'01', type:'dor', instructor:'דור נצר', date:'29.06.2025',
+   title:'מעבר מדו-מימד לתלת-מימד',
+   desc:'סקירת כלי AI ליצירת 3D — Tripo, Nano Banana, Claude Polysurfaces.',
+   status:'done', tools:['tripo','nanobana','claude'],
+   summary:[
+     {t:'section', title:'פתיחה — גישות ליצירת תלת-מימד'},
+     {t:'text', content:'השיעור פתח בסקירה של שלוש הגישות ל-2D→3D: Model Generators חיצוניים, Claude, וכלי הדמיה. ההבדל המרכזי: Model Generators מייצרים Mesh — ויזואלי מצוין, קשה לעריכה. Claude מייצר Polysurfaces — גמיש לעריכה מלאה.'},
+     {t:'img', key:'2d_to_3d_approaches', cap:'שלוש הגישות ל-2D→3D',
+      desc:'הגישה הראשונה: כלי AI חיצוניים כמו Tripo ו-Rodin — מייצרים Mesh מהיר מתמונה. הגישה השנייה: Claude דרך Python script — מייצר Polysurfaces עריכים. הגישה השלישית: כלי הדמיה כמו Nano Banana — לסגנון ולרפרנס.'},
+     {t:'img', key:'external_vs_inhouse', cap:'External File מול In-House',
+      desc:'השוואה בין עבודה עם קובץ חיצוני (OBJ/FBX מכלי AI) לבין עבודה ישירה בתוכנות המשרד. הבדל מרכזי: קובץ חיצוני = Mesh, עבודה פנימית = Polysurfaces עריכים.'},
+     {t:'text', content:'הוצגו כלי יצירת 3D: Meshy (כללי, ממוצע), Kaedim ($150/חודש, דיוק גבוה), Krea (חינם, נמוך), Tripo (מומלץ, ~$20). בהשוואה — Tripo מנצח ביחס עלות-תועלת.'},
+     {t:'img', key:'tools_overview', cap:'סקירת כלי 3D — Meshy, Rodin, Krea, Tripo',
+      desc:'מבט כולל על הכלים המוצגים בשיעור. כל כלי עם לוגו, מחיר ויכולת עיקרית. Tripo ו-Rodin בולטים כמובילים.'},
+     {t:'img', key:'tools_table', cap:'טבלת השוואה מלאה',
+      desc:'טבלת השוואה מפורטת: כלי, פורמטי קלט נתמכים, פורמטי פלט, מחיר חודשי, ורמת שליטה. כדאי לשמור כרפרנס לבחירת כלי.'},
+     {t:'guide', gid:'nb-extract', note:'תרגול: חלץ פרט מתמונה שבחרת'},
+     {t:'section', title:'Nano Banana — חילוץ פרטים והדמיה'},
+     {t:'text', content:'Nano Banana (Imagen 3 דרך Gemini): שלב ביניים קריטי. מחלץ פרטים, מייצר איזומטרי נקי לפני Tripo. פרומפטים קצרים — פרומפטים ארוכים נחסמים.'},
+     {t:'img', key:'nano_banana_facade', cap:'Nano Banana — חילוץ פרט מחזית',
+      desc:'קלט: תמונת חזית מבנה. פלט: פרט בודד מבודד על רקע לבן, מבט איזומטרי 45°. זה בדיוק הקלט האידיאלי לTripo.',
+      action:'לחץ על כפתור המצלמה בGemini ← העלה תמונה ← כתוב פרומפט קצר'},
+     {t:'img', key:'nano_banana_full', cap:'מבנה שלם — 4 חזיתות איזומטרי',
+      desc:'דוגמה לפלט מלא: המבנה כולו מוצג מ-4 זוויות איזומטריות. מתאים להכנסה לRodin כרפרנס לסגנון.'},
+     {t:'section', title:'Claude — Polysurfaces ועריכה גיאומטרית'},
+     {t:'text', content:'Claude מייצר Polysurfaces דרך Python script לRhino — ניתן לעריכה מלאה. Tripo מייצר Mesh — ויזואלי מצוין אבל קשה לשינוי גיאומטרי.'},
+     {t:'img', key:'tripo_vs_claude', cap:'Tripo Mesh מול Claude Polysurfaces',
+      desc:'השוואה ישירה: שמאל — Mesh מTripo, צפוף, קשה לעריכה. ימין — Polysurfaces מClaude, בLayers, ניתן לשינוי מידות ומחיקת אלמנטים.'},
+     {t:'img', key:'rhino_polysurface', cap:'תוצר Claude בRhino',
+      desc:'המודל שקיבלנו מClaude פתוח בRhino. שימו לב ל-Layers בפאנל הימני — כל אלמנט (קירות, גג, פתחים) בשכבה נפרדת וניתן לעריכה עצמאית.'},
+     {t:'guide', gid:'claude-poly', note:'תרגול: הפק מודל Polysurfaces מבניין פשוט'},
+     {t:'section', title:'טכנולוגיות בסיס — Photogrammetry, NeRF, Depth Estimation'},
+     {t:'text', content:'טכנולוגיות בסיס: Photogrammetry (כמה תמונות → 3D), NeRF (הבנת אור), Depth Estimation (מתמונה אחת → עומק).'},
+     {t:'img', key:'nerf_example', cap:'NeRF — Neural Radiance Fields',
+      desc:'NeRF (Neural Radiance Fields): הטכנולוגיה שמאפשרת לבנות מודל תלת-מימדי מתמונות רגילות על ידי הבנת אופן פיזור האור. בסיס לכלי 3D מודרניים.'},
+     {t:'img', key:'depth_from_image', cap:'Depth Estimation — הערכת עומק',
+      desc:'Depth Estimation: מתמונה אחת בלבד, ה-AI מעריך מה רחוק ומה קרוב. צבעים חמים = קרוב, קרים = רחוק. זה מה שמאפשר לכלים כמו Tripo לייצר נפח ממקור דו-מימדי.'},
+     {t:'section', title:'Tripo — תמונה למודל תלת-מימד'},
+     {t:'text', content:'Tripo — שלב מעשי: העלאת תמונת מבנה → Generate → עריכת חומרים → ייצוא OBJ. הטריפו לא קורא תכניות דו-מימדיות היטב — עדיף תמונות בלבד.'},
+     {t:'img', key:'tripo_interface', cap:'Tripo — ממשק יצירה',
+      desc:'ממשק Tripo: בצד שמאל אפשרויות יצירה, במרכז תצוגה מקדימה של המודל. לחיצה על "Image to 3D" היא נקודת הכניסה הרגילה.',
+      action:'לחץ Create ← בחר Image to 3D ← העלה תמונה'},
+     {t:'img', key:'tripo_texture', cap:'עריכת חומרים בTripo',
+      desc:'לאחר יצירת המודל ניתן לערוך חומרים: בחירת פלטת צבעים, שינוי מרקם, התאמת בהירות. זה שלב ויזואלי שמשפר את התוצר לפני הייצוא.'},
+     {t:'guide', gid:'tripo-img3d', note:'תרגול: ייצר מודל מתמונה שבחרת'},
+     {t:'section', title:'Coohom — עיצוב פנים ודירות'},
+     {t:'text', content:'Coohom: לעיצוב פנים ודירות בלבד. תכנית 2D → מודל + ריהוט + רינדור. לא מתאים לפרויקטים גדולים.'},
+     {t:'img', key:'coohom_3d', cap:'Coohom — מודל 3D אוטומטי מתכנית',
+      desc:'תוצר Coohom: הדירה ממודלת אוטומטית עם קירות, תקרה וריצוף. משם ניתן להוסיף ריהוט מהקטלוג ולהפיק רינדור. שימושי לשלב שיווק של דירות מגורים.'},
+     {t:'text', content:'MCP + Revit/AutoCAD: עדיין לא production-ready. Python script לRhino הוא הדרך הנכונה היום.'},
+   ]},
+  {id:'lesson2', num:'02', type:'dor', instructor:'דור נצר', date:'06.07.2025',
+   title:'עריכת 3D + Visual Scripting Workflows',
+   desc:'Segmentation בTripo, Rodin 3D-to-3D, ComfyUI, Weavy ו-xFigura.',
+   status:'done', tools:['tripo','rodin','comfyui','weavy','xfigura'],
+   summary:[
+     {t:'section', title:'Tripo — Segmentation ופירוק לשכבות'},
+     {t:'text', content:'Tripo — לשונית Segmentation: ניתן לפרק את המודל לשכבות. מומלץ: מצב Standard ולא Detailed מלא. מברשת מאפשרת להעביר אלמנטים בין שכבות — קודם דוגמים שכבת יעד, אחר כך האלמנט.'},
+     {t:'img', key:'tripo_segmentation', cap:'Segmentation — המודל מוצג צבעוני לפי שכבות',
+      desc:'בלשונית Segmentation המודל מוצג עם צבע שונה לכל שכבה. ניתן לבחור Standard (מומלץ) לפירוק סביר, או Detailed לפירוק מפורט יותר אך מורכב לניהול.',
+      action:'לחץ על לשונית Segmentation ← בחר Standard ← לחץ Segment'},
+     {t:'img', key:'tripo_merge', cap:'Merge Parts — איחוד שכבות',
+      desc:'אם שני אלמנטים שאמורים להיות יחד פוצלו בטעות — ניתן לאחד אותם. בחר את שתי השכבות (Ctrl + קליק) ← קליק ימני ← Merge.',
+      action:'Ctrl + בחר שכבות ← קליק ימני ← Merge Parts'},
+     {t:'img', key:'tripo_add_part', cap:'Add Part — הוספת שכבה חדשה',
+      desc:'כשרוצים להפריד אלמנט לשכבה חדשה לחלוטין — לוחצים Add Part, נותנים שם, ואז משתמשים במברשת להעברת האלמנט. שימושי לבידוד חלונות או גג.',
+      action:'לחץ Add Part ← תן שם ← צייר במברשת על האזור הרצוי'},
+     {t:'section', title:'Rodin — מסות קיימות למודל מפורט'},
+     {t:'text', content:'3D to 3D עם Rodin (Hyper3D): יש כבר סידור מסות מRhino/SketchUp ורוצים לפתח חלופה עיצובית בתוך אותו נפח. Voxel ControlNet מקבל OBJ/FBX ומייצר מודל מפורט.'},
+     {t:'img', key:'3d_to_3d_concept', cap:'3D to 3D — מסות למודל מפורט',
+      desc:'הרעיון: יש מסה גיאומטרית פשוטה (גבולות קו בניין, גבהים) — Rodin ממלא אותה בפרטים אדריכליים (חזיתות, חלונות, מרקמים) תוך שמירה על אותו נפח בדיוק.'},
+     {t:'img', key:'3d_to_3d_why', cap:'מתי להשתמש ב-3D to 3D?',
+      desc:'מתאים כשיש כבר החלטה על תפוסה — גבולות קו בניין, גבהים, אחוזי בנייה. רוצים לחקור חלופות עיצוביות בתוך אותם אילוצים מבלי לחזור לשרטוט מאפס.'},
+     {t:'guide', gid:'rodin-3dto3d', note:'תרגול: ייצא מסה מRhino והכנס לRodin'},
+     {t:'section', title:'טקסטורות PBR — ייבוא לRhino ולSketchUp'},
+     {t:'text', content:'טקסטורות Rodin: מגיעות בנפרד — diffuse, metallic, roughness. ב-Rhino: Materials → Physically Based → חבר כל קובץ. ב-SketchUp: Diffuse בלבד.'},
+     {t:'img', key:'rodin_rhino3', cap:'Rhino — Physically Based Material',
+      desc:'בRhino: בחר את האובייקט ← Properties ← Material ← Physically Based. זה הפורמט שמקבל את שלוש הטקסטורות של Rodin ומניב רינדור מלא ב-V-Ray/Enscape.',
+      action:'בחר אובייקט ← Properties ← Material ← Physically Based'},
+     {t:'img', key:'rodin_rhino4', cap:'חיבור PBR — diffuse, metallic, roughness',
+      desc:'שלושה שדות שצריך למלא: Color ← texture_diffuse.png, Metallic ← texture_metallic.png, Roughness ← texture_roughness.png. לחץ על כל שדה ← Browse ← בחר קובץ.',
+      action:'לחץ על כל שדה ← Browse ← בחר את הקובץ המתאים מתיקיית Rodin'},
+     {t:'guide', gid:'rodin-texture', note:'תרגול: ייבא טקסטורות מRodin לRhino'},
+     {t:'section', title:'Visual Scripting — ComfyUI, Weavy, xFigura'},
+     {t:'text', content:'Visual Scripting / Workflows: בניית תהליכי עבודה חוזרים. שלושה כלים: ComfyUI (Open Source, שליטה מלאה), Weavy (ידידותי, Web), xFigura (מותאם לאדריכלים).'},
+     {t:'img', key:'workflow_tools', cap:'שלושת כלי ה-Visual Scripting',
+      desc:'ComfyUI — Open Source, מותקן מקומית, שליטה מלאה. Weavy — Web-based, ספריית Workflows מוכנים, ידידותי. xFigura — מותאם לאדריכלים, Boards מוכנים לפרויקטים.'},
+     {t:'img', key:'comfyui_interface', cap:'ComfyUI — ממשק Nodes',
+      desc:'ממשק ComfyUI: כל תהליך בנוי מ-Nodes (קוביות) מחוברות בחוטים. הזרימה משמאל לימין — קלט נכנס משמאל, פלט יוצא מימין. רמת שליטה גבוהה אבל עקומת למידה תלולה.'},
+     {t:'img', key:'weavy_home', cap:'Weavy — ספריית Workflows',
+      desc:'דף הבית של Weavy: ספריית Workflows מוכנים שניתן לפתוח ולהתאים. מסודרים לפי קטגוריות — Architecture, Interior, Product Design. לחץ על Workflow ← Open לפתיחה.',
+      action:'בחר Workflow מהספרייה ← Open ← התאם פרמטרים'},
+     {t:'img', key:'weavy_workflow', cap:'Weavy — Architecture Angles Workflow',
+      desc:'Workflow לייצור תמונות מבנה מזוויות שונות. קוראים משמאל לימין: Battery ראשון = קלט תמונה, Battery שני = פרומפט סגנון, Battery שלישי = פלט. כל Battery ממתין להפעלה ידנית.',
+      action:'הרץ Battery ראשון ← המתן ← הרץ Battery שני'},
+     {t:'img', key:'weavy_image2_3d', cap:'Weavy — Image to 3D Workflow',
+      desc:'Workflow שמחבר Nano Banana ו-Rodin: תמונת חזית נכנסת ← Nano Banana מייצר איזומטרי ← Rodin ממיר ל-3D. שלושה Batteries בסדרה — מריצים אחד אחד.'},
+     {t:'guide', gid:'weavy-workflow', note:'תרגול: הרץ Workflow Image to 3D'},
+     {t:'img', key:'xfigura_boards', cap:'xFigura — Boards קיימים',
+      desc:'ספריית Boards של xFigura: Rhino to Video, 3D Workflow, Facade Module Tower ועוד. כל Board הוא Workflow מוכן שניתן לפתוח ולהתאים. לחץ על Board ← Open Canvas.',
+      action:'בחר Board ← Open Canvas'},
+     {t:'img', key:'xfigura_canvas', cap:'xFigura Canvas — הוספת Node',
+      desc:'Canvas ריק של xFigura. כפל-קליק שמאלי פותח תפריט הוספת Node. קליק ימני על Node פותח אפשרויות עריכה. חוטים מחברים בין Nodes — גורר מ-Output של Node אחד ל-Input של הבא.',
+      action:'כפל-קליק על Canvas ← בחר סוג Node ← חבר ב-Output'},
+     {t:'img', key:'xfigura_model_select', cap:'xFigura — בחירת מודל ב-Node',
+      desc:'בתוך כל Node בוחרים מודל: Nano Banana (חינמי, Imagen 3), FLUX Pro (איכות גבוהה, בתשלום), Ideogram ועוד. ליד המודל מוצג עלות בטוקנים ומספר פלטים צפוי.',
+      action:'לחץ על שדה Model ← בחר Nano Banana ← כתוב פרומפט'},
+     {t:'img', key:'xfigura_3d_result', cap:'xFigura — תוצר: חזית → Nano Banana → Rodin 3D',
+      desc:'תוצר סופי של Workflow ב-xFigura: תמונת חזית קלט (שמאל), איזומטרי מNano Banana (אמצע), מודל 3D מRodin (ימין). זה בדיוק הזרימה שדנו בה לאורך השיעור.'},
+     {t:'guide', gid:'xfigura-canvas', note:'תרגול: בנה Canvas משלך'},
+   ]},
+  {id:'lesson3', num:'03', type:'anat', instructor:'ענת שטיבלמן',
+   date:'29.06.2026', title:'Claude כשותף מקצועי: הנחיות, Projects, Skills',
+   desc:'בניית יועצים וכלים מקצועיים ב-Claude. הגדרות, Knowledge Base, וארכיטקטורת עבודה שיטתית.',
+   status:'done', tools:['claude'],
+   summary:[
+     {t:'section', title:'מבוא — ענת שטיבלמן וגישתה'},
+     {t:'text', content:'ענת שטיבלמן, אדריכלית העיר אשדוד, הציגה איך היא משתמשת בבינה מלאכותית בעבודתה. היא בנתה אפליקציה משלה שמרכזת את כל הכלים שפיתחה לחיים ולעבודה, ומציגה גישה מובנית לטיפול בהנדסת פרומפטים ובניית אמון עם המערכת.'},
+     {t:'img', key:'lesson03_01', cap:'אפליקציה מרוכזת', desc:'אפליקציה שבנתה ענת המרכזת את כל הכלים והיועצים שיצרה'},
+     {t:'section', title:'תוכן המפגש'},
+     {t:'text', content:'תוכן המפגש מורכב משלושה חלקים: הנחיות לפרומפטים (הגדרות ברורות ל-Claude), הנדסה מקצועית (בניית יועצים וכלים ספציפיים), ואינטגרציה למערכת (הפיכת הכלים לחלק מהעבודה היומיומית).'},
+     {t:'img', key:'lesson03_02', cap:'תוכן המפגש', desc:'שקף תוכן הקורס המחולק לשלושה חלקים עיקריים'},
+     {t:'section', title:'יועצים מקצועיים — אגף של איש אחד'},
+     {t:'text', content:'בתפקידה כאדריכלית העיר, ענת בנתה מגוון סוכנים וכלים שמסייעים לה בעבודה שחסרה בעובדים. כל סוכן מטפל בתחום מוקד ספציפי. הפילוסופיה: בעזרת Claude אפשר להגדיר בדיוק מה הבעיה, מי אמור לפתור אותה, ואיך הוא צריך לחשוב.'},
+     {t:'img', key:'lesson03_03', cap:'יועצים מקצועיים', desc:'מפה של 7 קטגוריות יועצים מקצועיים שבנתה ענת — אגף שלם של איש אחד'},
+     {t:'section', title:'בהגדרות: איך, מה, למה'},
+     {t:'text', content:'Claude מאורגן בשלוש שכבות הגדרות: Setting (הגדרות כלליות), Project (הגדרות ספציפיות לפרויקט), ו-Chat (הדיאלוג הדינמי). כל שכבה מוסיפה קונטקסט ומדייקת את ההתנהגות.'},
+     {t:'img', key:'lesson03_04', cap:'שלוש שכבות הגדרה', desc:'טבלת רמות ההנחיות: Setting, Project, Chat — עם תפקוד, מרכיבים ודוגמאות לכל אחד'},
+     {t:'section', title:'Projects — מרחב עבודה ממוקד'},
+     {t:'text', content:'כל פרויקט ב-Claude מכיל הנחיות ספציפיות, קבצים (דוקומנטציה וחוקים), Skills (כלים מתקדמים), והיסטוריית שיחה. ההבדל המהותי: ה-Profile האישי נשאר קבוע וסטאטי — ה-Project הוא דינמי וספציפי לכל משימה.'},
+     {t:'img', key:'lesson03_05', cap:'Project Knowledge', desc:'ממשק ניהול הפרויקט עם Project Knowledge ו-Set Project Instructions'},
+     {t:'section', title:'Profile — הגדרות אישיות'},
+     {t:'text', content:'בחלק ה-Profile של Claude אפשר להגדיר: מי אתה, מה הרקע המקצועי שלך, וכיצד אתה מצפה לקבל תשובות. זה מעניק ל-Claude הקשר סטאטי לאורך כל השיחות. אפשר להגדיר סגנון כתיבה, גישה לחיפוש מידע, ועוד.'},
+     {t:'img', key:'lesson03_06', cap:'Profile Settings', desc:'ממשק הגדרות ה-Profile האישי של Claude עם שדות זהות, תפקיד, והוראות קבועות'},
+     {t:'section', title:'Project Instructions — הגדרת יועץ ספציפי'},
+     {t:'text', content:'בהנחיות לפרויקט אפשר להגדיר תפקיד ספציפי ליועץ: מי הוא, מה הוא יכול, איך הוא חושב, ומה הוא מוציא. לדוגמה: יועץ מבא״ת שחייב לענות מתוך החוק בלבד, או אדריכל שותף ביקורתי ויצירתי לפיתוח קונספט.'},
+     {t:'img', key:'lesson03_07', cap:'Set Project Instructions', desc:'דיאלוג הגדרת הנחיות פרויקט עם שדה טקסט חופשי'},
+     {t:'section', title:'Skills — כלי מרכזי'},
+     {t:'text', content:'Skills הם אחד האלמנטים החשובים ביותר ב-Claude. כל Skill הוא מומחה עם הוראות מיוחדות וגישה לקונטקסט ספציפי. דוגמאות: dynamic-intuitive-app-architecture, archi-tact-expert, epoch-industrial-designer. Skills מאפשרים להפוך Claude לכלי מדויק ומתמחה.'},
+     {t:'img', key:'lesson03_08', cap:'Customize and Skills', desc:'ממשק ה-Skills עם רשימת כלים אישיים שנוצרו — כולל שמות, תאריכי עדכון ותיאורים'},
+     {t:'section', title:'פרסונליזציה וכהנמן'},
+     {t:'text', content:'דניאל כהנמן מלמד שאנחנו חושבים בשתי מערכות: האינטואיטיבית המהירה והמנוחה האיטית. כשאנחנו עובדים עם בינה מלאכותית, האדם תורם אינטואיציה והקשר, והבינה תורמת עיבוד מהיר וניתוח נתונים. הפרסונליזציה מאפשרת לחבר את שתי המערכות — Claude לומד איך אתה חושב ומתאים את עצמו.'},
+     {t:'img', key:'lesson03_09', cap:'לחשוב מהר לחשוב לאט', desc:'ספר של דניאל כהנמן עם הסבר על שתי מערכות החשיבה ומשמעותן לעבודה עם AI'},
+     {t:'section', title:'פרק 1 — השראה: מרעיון לביצוע'},
+     {t:'text', content:'כאשר פותחים פרויקט חדש, מגדירים ל-Claude: מי הוא (תפקיד), מה הקלט (מה נשלח), מה הפלט הרצוי (מה מצפים לקבל), וקונטקסט נוסף (מי אני, מי קהל היעד). ארבעת הרכיבים האלו הם הבסיס לכל שיחה מוצלחת.'},
+     {t:'img', key:'lesson03_10', cap:'הנחיות לפרויקט חדש', desc:'שקף הדרכה על פתיחת פרויקט חדש עם Set Project Instructions ומבנה ההנחיות'},
+     {t:'img', key:'lesson03_11', cap:'תרגיל א — הנחיות לפרויקט', desc:'תרגיל ראשון: פתיחת פרויקט חדש, מתן שם, כתיבת הנחיות, פתיחת שיחה ועליית תמונה'},
+     {t:'section', title:'פרק 2 — ביצוע: יועצים מקצועיים'},
+     {t:'text', content:'דוגמה קונקרטית: יועץ פרוגרמה. הכלי קולט מידע על הקרקע ודרישות היעד, ומפיק פרוגרמה משוקללת עם חישובים לפי מספר יח״ד. זה מדגים כיצד אפשר לקחת מקצוע אמיתי ולהגדיר אותו בצורה שClaude יכול לבצע.'},
+     {t:'img', key:'lesson03_12', cap:'יועץ פרוגרמות — מחשבון', desc:'ממשק מחשבון פרוגרמה עם סליידר יחידות דיור ופלט מחושב של שימושים ושטחים'},
+     {t:'img', key:'lesson03_13', cap:'יועץ פרוגרמות — קבועים משתנים', desc:'ממשק המחשבון עם קבועים לפי אזור גיאוגרפי: תל אביב, מרכז, ירושלים ועוד'},
+     {t:'section', title:'הנחיות לפרויקט — הגדרת יועץ מקצועי'},
+     {t:'text', content:'הנחיות לפרויקט מאפשרות לאדריכל להגדיר יועץ שיש לו גישה לכל מיני הגדרות — יועץ פרוגרמה, יועץ משפטי, יועץ פנג שואי. כל אחד עונה מתוך הידע שהוגדר לו. אחרי שהגדרת את ה-Profile שלך ואת הנחיות הפרויקט, Claude ישלב את שניהם ויענה בדיוק כמו שאתה מתכוון.'},
+     {t:'img', key:'lesson03_14', cap:'הנחיות לפרויקט עם קבצים', desc:'ממשק Set Project Instructions לצד Files Panel עם קבצי יועצים שונים טעונים'},
+     {t:'section', title:'הגדרת יועץ — מי הוא ומאיזה מידע הוא עונה'},
+     {t:'text', content:'כדי להגדיר יועץ: קובעים מה הוא יועץ בו, ממה הוא עונה (קבצים ספציפיים), ומה הפלט שלו. לאחר מכן אפשר לפתוח שיחה ולבקש ממנו לענות בתור אותו יועץ בדיוק.'},
+     {t:'img', key:'lesson03_15', cap:'הגדרת יועץ פרוגרמה', desc:'שיחה שבה מוגדר יועץ פרוגרמה עם הוראות מפורטות לחישוב שטחים ושימושים לפי תקינה'},
+     {t:'img', key:'lesson03_16', cap:'מקורות חוקיים ליועץ', desc:'רשימת תחומי אחריות ומקורות רגולטוריים שהיועץ מכיר: תקנות בנייה, נגישות, שיכון ועוד'},
+     {t:'section', title:'Files — Knowledge Base של הפרויקט'},
+     {t:'text', content:'כל הקבצים שמועלים לפרויקט הופכים ל-Knowledge Base שClaude יכול לקרוא ולהשתמש בו. בדוגמה של יועץ הפרוגרמה: קבצי חוקים, תקנות, וטבלאות חישוב — כולם זמינים ליועץ בכל שאלה.'},
+     {t:'img', key:'lesson03_17', cap:'Files Panel', desc:'ממשק ניהול קבצי הפרויקט: יועץ פרוגרמות, יועץ משפטי, יועץ פנג שואי, מקרא, נגב ועוד'},
+     {t:'section', title:'הפירמידה של הגדרות — המודל המלא'},
+     {t:'text', content:'הארכיטקטורה המלאה: Profile (אישי וקבוע — מי אתה, איך אתה חושב) ← Project Instructions (ספציפי ודינמי — מי היועץ, מה הוא יודע, מה הוא מוציא) ← Skills (כלים מתקדמים — מומחים מוגדרים) ← Chat (הביצוע — שאלה, תשובה, זיכרון). Profile הוא שכבה קבועה, Project דינמית, Skills כלים מיוחדים, Chat הביצוע.'},
+     {t:'section', title:'Memory — השכבה הקריטית'},
+     {t:'text', content:'Memory מאפשרת למערכת ללמוד ממך. דוגמה: Claude ענה בדרך שלא אהבת — אתה אומר "זכור שאני מעדיף תשובות בעברית בלבד" — הוא זוכר ומתאים בפעם הבאה. Memory היא מה שהופכת את הכלי מסטאטי לכלי שמתפתח עם הזמן.'},
+     {t:'section', title:'יישומים לעולם האדריכלות'},
+     {t:'text', content:'אותה ארכיטקטורה ניתנת לשכפול לכל תחום: יועץ תב״ע (גישה לחוקי תכנון), יועץ עלויות (חישוב מחירים וחומרים), יועץ עיצוב (דוקומנטציה של פרויקטים קודמים), יועץ BIM (ידע ב-Revit ומודלים). כל אחד — אותה ארכיטקטורה, הוראות שונות, קבצים שונים.'},
+     {t:'section', title:'סיכום'},
+     {t:'text', content:'השיעור הציג מודל שיטתי לעבודה עם Claude: הגדר את עצמך (Profile), הגדר את הפרויקט (Instructions), תן קבצים (Knowledge Base), בנה Skills (כלים מתקדמים), תקשר עם Memory ופידבק. זה מאפשר להפוך Claude מחיפוש מהיר לשותף מקצועי שזוכר, לומד, וחושב כמו שאתה רוצה.'},
+   ]},
+  {id:'lesson4', num:'04', type:'anat', instructor:'ענת שטיבלמן', date:'--', title:'Claude Code לאדריכלים', desc:'Claude Code, Skills, ממשק ויזואלי.', status:'soon', tools:[], summary:[]},
+  {id:'lesson5', num:'05', type:'joint', instructor:'דור + ענת', date:'--', title:'מפגש סיכום', desc:'הצגת פרויקטים, שאלות, תרגול.', status:'soon', tools:[], summary:[]},
+];
+
+const LESSONS_ARCGIS = [
+  {id:'arcgis-01', num:'E1', type:'event', instructor:'סיסטמטיקס + Esri',
+   date:'28.06.2026', title:'ArcGIS AI 2026 — Integrated Intelligence',
+   desc:'כנס AI במערכות GIS: GeoAI, AI Assistants, AI Agents ו-MCP.',
+   status:'done', tools:['arcgis','claude'],
+   summary:[
+     {t:'section', title:'מבוא — שלושת עמודי ה-AI ב-ArcGIS'},
+     {t:'text', content:'ESRI, יצרנית מערכות GIS המובילות בעולם, מציגה את האינטגרציה המלאה של AI לתוך פלטפורמת ArcGIS. השינוי אינו תיאורטי — AI כבר מוטמע בתוך כלי העבודה הקיימים. הכנס הציג שלושה מסלולים מרכזיים: GeoAI (כלים ומודלים לניתוח מרחבי), AI Assistants (ממשקי שיחה שמאיצים את למידת המערכת), ו-AI Agents (סוכנים עצמאיים שמבצעים משימות GIS מורכבות).'},
+     {t:'img', key:'arcgis_01', cap:'כותרת הכנס — ArcGIS AI: Integrated Intelligence',
+      desc:'ArcGIS AI: Integrated Intelligence, The Science of Where. Powered by AI. סיסטמטיקס ו-Esri, 28.6.2026.'},
+     {t:'img', key:'arcgis_02', cap:'שלושת עמודי ה-AI ב-ArcGIS',
+      desc:'GeoAI (Advancing Science), AI Assistants (Productivity), AI Agents (Collaboration). מתחת: ArcGIS עם GIS Tools & Data, Agents, Models, LLMs.'},
+
+     {t:'section', title:'GeoAI — כלים ומודלים לניתוח מרחבי'},
+     {t:'text', content:'GeoAI מתמקד בחילוץ ידע מנתונים גיאוגרפיים. שלוש רמות: מודלים מוכנים לשימוש ישיר, כלים מובנים בתוכנה, וסביבת Python למפתחים. יתרון מודל מוכן: אין צורך בנתוני אימון, תיוג, אימון עצמי, או כוח מחשוב — פשוט מפעילים.'},
+     {t:'img', key:'arcgis_03', cap:'סוגי נתונים, משימות ואינטגרציה',
+      desc:'GeoAI תומך במגוון נתונים. שלוש דוגמאות ממחישות: תמונות אוויר/לווין (Object Detection), ליידאר (Point Cloud Classification), וידאו (Tracking). ספריות: PyTorch, TensorFlow, Keras, SciPy.'},
+     {t:'img', key:'arcgis_04', cap:'שלוש רמות הגישה ל-GeoAI',
+      desc:'מעגלים מקוננים: מבחוץ — מודלים מאומנים (ready to use). באמצע — כלים בתוכנה. בפנים — Python לבניית מודלים עבור תלת-מימד, וידאו, הדמאות, וקטור, טקסט, טבלאות, סדרות זמן.'},
+     {t:'img', key:'arcgis_05', cap:'יתרון המודל המוכן',
+      desc:'Pre-trained AI models חוסכים: השגת נתונים לאימון, תיוג (Labeling), אימון המודל, משאבי מחשוב גדולים. המודל נגיש לכל משתמש.'},
+     {t:'img', key:'arcgis_06', cap:'מעל 100 מודלים מאומנים מראש ב-Esri',
+      desc:'מעל 100 מודלי AI לתמונות, הדמאות, תלת-מימד וטקסט. מודלים תשתיתיים: SAM, Text SAM, Prithvi. כל מודל מגיע עם תיעוד לאיזה אזור גיאוגרפי הוא מותאם.'},
+     {t:'img', key:'arcgis_07', cap:'Solar Panel Detection — דוגמה ממשית',
+      desc:'מודל זיהוי פנלים סולאריים. Imagery: Drone (5-15cm). Geographies: United States. מריצים ישירות מה-Living Atlas ללא אימון נוסף.'},
+     {t:'img', key:'arcgis_08', cap:'Deep Learning ב-ArcGIS Online',
+      desc:'DL Online: ללא חומרה מיוחדת. מודלים מה-Living Atlas. דורש רסטר ושכבות כשירותי AGOL. חשוב: עולה קרדיטים — שיקול מעשי בהטמעה.'},
+     {t:'img', key:'arcgis_09', cap:'ממשק Analysis Tools ב-ArcGIS Online',
+      desc:'ArcGIS Online Analysis Tools: כולל Model Builder, Raster Functions, Raster Function Templates, History.'},
+     {t:'img', key:'arcgis_10', cap:'Living Atlas — מאגר המודלים הגלובלי',
+      desc:'Living Atlas: מאגר גלובלי של Esri עם שכבות ומודלים מוכנים. גישה ישירה מממשק בחירת הפריטים — חיפוש ושימוש ללא אימון עצמי.'},
+     {t:'img', key:'arcgis_11', cap:'זיהוי פנלים סולאריים — הדגמה חיה',
+      desc:'הדגמה ב-ArcGIS Online: זיהוי פנלים סולאריים בקמפוס האוניברסיטה העברית. שכבות: solar_panel, tree_canopy_SAM.'},
+     {t:'img', key:'arcgis_12', cap:'דרישות מערכת ל-Deep Learning ב-ArcGIS Pro',
+      desc:'תוכנה: Image Analyst, Deep Learning Framework, Nvidia CUDA. חומרה: GPU עם 8 GB VRAM לפחות. ספריות: PyTorch, TensorFlow, Keras, cuDNN, fast.ai.'},
+     {t:'img', key:'arcgis_13', cap:'Pipeline GeoAI ב-ArcGIS Pro',
+      desc:'תהליך מלא: ניהול תמונות ← תיוג ← הכנת נתונים ← אימון ← Inferencing ← ניתוח תובנות ← שימוש במובייל/ניטור. כלים: Image Analyst, 3D Analyst, ArcGIS Online, Survey123, Deep Learning Studio.'},
+     {t:'img', key:'arcgis_14', cap:'מודל תלת-מימד של ירושלים ב-ArcGIS Pro',
+      desc:'ArcGIS Pro עם מודל תלת-מימד של ירושלים. בסיס לזיהוי אובייקטים תלת-מימדיים.'},
+     {t:'img', key:'arcgis_15', cap:'Object Detection — הגדרת מודל לזיהוי חלונות',
+      desc:'Exploratory Analysis, Object Detection. מודל: Esri Windows and Doors. Classes: All. Confidence: 0.5. Output: Windows. Symbology: Vertical Bounding Box.'},
+     {t:'img', key:'arcgis_16', cap:'Object Detection — ריצה על מודל תלת-מימד',
+      desc:'המודל מזהה חלונות ודלתות אוטומטית על בניין בירושלים. יישום: מלאי בניינים, ספירת פתחים, תכנון שיפוצים.'},
+
+     {t:'section', title:'AI Assistants — עוזרים חכמים ב-ArcGIS Pro'},
+     {t:'text', content:'AI Assistants מאפשרים תפעול ArcGIS Pro בשפה טבעית — שאלות, פעולות, בדיקת שכבות — ללא ידיעה מוקדמת של תפריטים. מנמיך חסם כניסה ומאיץ עבודה.'},
+     {t:'img', key:'arcgis_17', cap:'AI Assistants — ArcGIS Pro',
+      desc:'מרצה: ליאור אורקין. הדגמה: שאילתה מרחבית בשפה טבעית — Show all pedestrian injuries within 2 miles of...'},
+     {t:'img', key:'arcgis_18', cap:'מה ה-AI יכול לעשות?',
+      desc:'שלוש יכולות: הבנה מבוססת כתיבה, ביצוע פעולות במהירות, פתרון בעיות. מקיף: Documentation, ArcGIS Hub, ArcGIS Pro, Arcade, Survey123, StoryMaps.'},
+     {t:'img', key:'arcgis_19', cap:'Esri Early Adopter Community',
+      desc:'earlyadopter.esri.com — גישה לגרסאות בטא: ArcGIS Pro assistant, ArcGIS Online, ArcGIS Earth, ArcGIS for AutoCAD, XR Viewer ועוד.'},
+     {t:'img', key:'arcgis_20', cap:'ArcGIS Pro Catalog — מבנה נתונים',
+      desc:'Catalog עם GDB ישראלי: שכבות is_gas, is_cty, is_mun, is_grd, is_blk ועוד. בסיס להדגמת ה-Assistant.'},
+     {t:'img', key:'arcgis_21', cap:'Assistant Beta — שאילתה בעברית',
+      desc:'מהי השכבה שמתאימה לתחנות הדלק? ← is_gas. כבה את כל השכבות הפוליגוניות ← רשימה אוטומטית. הכל בעברית.'},
+     {t:'img', key:'arcgis_22', cap:'תוצאת ה-Assistant — שכבת תחנות דלק',
+      desc:'שכבת is_gas לבד על מפת ישראל. טבלת Attributes: 2,714 תחנות דלק עם שם, כתובת, עיר.'},
+     {t:'img', key:'arcgis_23', cap:'Geoprocessing Assistant',
+      desc:'ניתוח בשפה חופשית: קלט — טבלת Excel של אזורי ענין. פלט — אזורי ענין במרחק ממנחלים. האסיסטנט מוביל שלב אחר שלב.'},
+     {t:'img', key:'arcgis_24', cap:'Release Plan — Beta/Preview 2026',
+      desc:'ArcGIS Pro Assistant — Beta/Preview 2026. בשנה הקרובה: גרסאות מלאות. יכולות: ArcGIS Pro Actions, ArcPy Code, Graph Query, Query Layer.'},
+     {t:'img', key:'arcgis_25', cap:'Documentation Assistant',
+      desc:'עזרה ישירות מהתיעוד הרשמי של Esri. מחייב חשבון ארגוני. חיפוש בעברית. מקורות: דוקומנטציה, מדריכים, בלוגים טכניים.'},
+
+     {t:'section', title:'AI Agents ב-Web — ArcGIS Online'},
+     {t:'text', content:'AI Agents ב-Web מרחיבים את יכולות ה-Assistant לממשק הענן. יצירת יישומים, סקרים ומפות סיפור בשפה טבעית, ניתוח תמונות ויצירת קוד.'},
+     {t:'img', key:'arcgis_26', cap:'הגדרות ארגוניות — הפעלת AI',
+      desc:'הגדרות ArcGIS Online לאפשור AI: אפליקציות מאושרות, אפליקציות Esri חסומות, גישה חיצונית. ניהול הרשאות ברמה ארגונית.'},
+     {t:'img', key:'arcgis_27', cap:'Arcade Assistant — סינון ב-Popup',
+      desc:'יצירת Arcade expression בשפה טבעית: צור popup שמציג אוכלוסיה לפי גילאים בירוק ובמודגש — הקוד נוצר אוטומטית.'},
+     {t:'img', key:'arcgis_28', cap:'Story Map — יצירה עם AI',
+      desc:'עם כלביא — ניתוח התרעות 13-24.6.2025, 21.6k תרעות. AI מסייע: סיכום, שינוי טון, עיצוב. מפה אינטראקטיבית + גרפים.'},
+     {t:'img', key:'arcgis_29', cap:'Story Map — עוזר תוכן',
+      desc:'AI מסייע: ניסוח כותרות, שינוי טון, תרגום, סיכום. מופעל ב-Revise בתוך עורך ה-StoryMap.'},
+     {t:'img', key:'arcgis_30', cap:'Survey123 — יצירת סקר עם AI',
+      desc:'יצירה ע"י Prompt, תרגום, ניתוח תמונה, תמלול. דוגמה: Fire Hydrant Inspection Form.'},
+
+     {t:'section', title:'AI-Ready ArcGIS — Metadata ו-Embeddings'},
+     {t:'text', content:'כדי שה-AI יוכל לעבוד עם נתוני GIS, הנתונים צריכים להיות AI-Ready — מתועדים עם Metadata מפורט. שמות שכבות ברורים, תיאורים, קטגוריות ומילות מפתח מאפשרים ל-AI להבין ולהחזיר תוצאות נכונות.'},
+     {t:'img', key:'arcgis_31', cap:'AI-Ready ArcGIS — כותרת',
+      desc:'הכנת תוכן מרחבי לעידן הבינה המלאכותית. מיצוי Metadata ותובנות מכלי ArcGIS. מרצה: יגאל מונטנר.'},
+     {t:'img', key:'arcgis_32', cap:'למה צריך Metadata?',
+      desc:'4 ממדים: Findability (מציאת המידע הנכון), Trust (אמינות — מקור, תאריך, מגבלות), Governance (ניהול ארגוני), AI Readiness (Metadata משפר את יכולת ה-AI לפרש ולהפיק תובנות גאו-מרחביות).'},
+     {t:'img', key:'arcgis_33', cap:'מהו Embeddings?',
+      desc:'Embedding = תעודת זהות מתמטית לנתונים. מאפשר: למידה עצמית (הקשרים נוצרים אוטומטית), חיפוש סמנטי (לפי כוונה, לא מילות מפתח בלבד), צמצום נתונים (ייצוג יעיל).'},
+     {t:'img', key:'arcgis_34', cap:'Dublin Core Metadata Style',
+      desc:'הגדרת Metadata Style ב-ArcGIS Online: Dublin Core+ הוא הסטנדרט המומלץ לשאפיות עם כלי AI.'},
+     {t:'img', key:'arcgis_35', cap:'Mapping שמות עבריים לשמות טכניים',
+      desc:'אחוז עובדים בגיל 15+ ↔ WrkY_pcrn. גיל נישואין חציוני - זכרים ↔ m_MarriageAge_mdn. Metadata ברור מאפשר ל-AI לזהות שדה נכון מתיאור בשפה טבעית.'},
+
+     {t:'section', title:'AI Agents מתקדמים — MCP ו-Agent Builder'},
+     {t:'text', content:'השלב המתקדם ביותר: חיבור מערכות חיצוניות ל-GIS דרך MCP (Model Context Protocol). מאפשר למודלי שפה כמו Claude לגשת לנתונים גיאוגרפיים ולבצע פעולות GIS. Agent Builder (Alpha) — בניית סוכנים ויזואלית ללא קוד.'},
+     {t:'img', key:'arcgis_36', cap:'Agent Builder — חזון (Alpha)',
+      desc:'Visual design, no coding. Deploy: Enterprise + Online. Third-party apps via A2A (Agent-to-Agent). ממשק: Log Submission ← Check Similar ← Details Need Correction. מודלים: GPT-4.1 mini, GPT-4.1.'},
+     {t:'img', key:'arcgis_37', cap:'חיבור Claude ל-ArcGIS Location Services MCP',
+      desc:'Claude Desktop, Developer ← Local MCP servers. ArcGISLocationServices: npx mcp-remote https://glocation-services-mcp.arcgis.com/beta/mcp --header Authorization ${AUTH_HEADER}.'},
+     {t:'img', key:'arcgis_38', cap:'Enterprise MCP — חיבור ארגוני',
+      desc:'Enterprise MCP: mcp-remote https://mcpbeta.webgistesting.net/server/platform/mcp --header Authorization ${AUTH_TOKEN}. גישה ל-feature layers ו-geoprocessing הארגוני.'},
+     {t:'img', key:'arcgis_39', cap:'שני חיבורי MCP במקביל',
+      desc:'Local MCP servers: Enterprise MCP + ArcGISLocationServices + notebooklm. Location Services (שירותי מיקום) + Enterprise (נתוני הארגון).'},
+     {t:'img', key:'arcgis_40', cap:'Claude + ArcGIS MCP — הדגמה חיה',
+      desc:'Claude Opus 4.5 מחובר ל-ArcGIS Location Services MCP. שירותים זמינים: Geocoding (find_address_candidates), Reverse Geocoding, Routing (solve_route), Elevation (elevation_at_locations), מפות PNG עם נקודות ועם קווים. Enterprise MCP: feature layers ו-geoprocessing. גרסה 12.2 — צפויה נובמבר 2026.'},
+   ]},
+];
+
+const WIZARD_MATRIX = {
+  render_photo:   [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'חילוץ + איזומטרי'},{tid:'lookx',gid:null,rank:'אלטרנטיבה',tag:'הדמיה'}],
+  render_sketch:  [{tid:'lookx',gid:null,rank:'מומלץ',tag:'הדמיה + קונטור'},{tid:'nanobana',gid:'nb-sketch',rank:'חינם',tag:'Gemini'}],
+  render_plan:    [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'הדמיה'}],
+  render_model:   [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'Screenshot → סגנון'}],
+  render_text:    [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'Gemini'}],
+  model3d_photo:  [{tid:'tripo',gid:'tripo-img3d',rank:'מומלץ',tag:'Mesh 3D'},{tid:'nanobana',gid:'nb-extract',rank:'שלב ביניים',tag:'קודם איזומטרי'}],
+  model3d_sketch: [{tid:'nanobana',gid:'nb-extract',rank:'שלב ביניים',tag:'קודם לAI'},{tid:'tripo',gid:'tripo-img3d',rank:'אחר כך',tag:'3D'}],
+  model3d_plan:   [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Polysurfaces'},{tid:'coohom',gid:'coohom-fp',rank:'לדירות',tag:'עיצוב פנים'}],
+  model3d_model:  [{tid:'rodin',gid:'rodin-3dto3d',rank:'מומלץ',tag:'3D to 3D'},{tid:'tripo',gid:'tripo-img3d',rank:'Mesh',tag:'צלם → Tripo'}],
+  model3d_text:   [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Polysurfaces'},{tid:'tripo',gid:'tripo-img3d',rank:'מהיר',tag:'Mesh'}],
+  detail_photo:   [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'חילוץ פרט'}],
+  detail_sketch:  [{tid:'nanobana',gid:'nb-extract',rank:'מומלץ',tag:'חילוץ'},{tid:'claude',gid:'claude-poly',rank:'אלטרנטיבה',tag:'Polysurfaces'}],
+  detail_plan:    [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  detail_model:   [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'עריכה בRhino'}],
+  detail_text:    [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  interior_photo: [{tid:'coohom',gid:'coohom-fp',rank:'מומלץ',tag:'עיצוב פנים'}],
+  interior_sketch:[{tid:'coohom',gid:'coohom-fp',rank:'מומלץ',tag:'עיצוב פנים'}],
+  interior_plan:  [{tid:'coohom',gid:'coohom-fp',rank:'מומלץ',tag:'תכנית → 3D'}],
+  interior_model: [{tid:'coohom',gid:'coohom-fp',rank:'מומלץ',tag:'ריהוט + רינדור'}],
+  interior_text:  [{tid:'coohom',gid:'coohom-fp',rank:'מומלץ',tag:'AI Styling'}],
+  script_photo:   [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  script_sketch:  [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  script_plan:    [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  script_model:   [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'Python → Rhino'}],
+  script_text:    [{tid:'claude',gid:'claude-poly',rank:'מומלץ',tag:'שימוש טבעי'}],
+};
+
+// ════════════════════════════════════════════
+// SECTION 2: LOGIC — אל תגע כאן
+// ════════════════════════════════════════════
+
+const IMG_MAP = {
+  '2d_to_3d_approaches': 'imgs/courses/ai-between-dimensions/lesson-01/2d_to_3d_approaches.png',
+  'external_vs_inhouse': 'imgs/courses/ai-between-dimensions/lesson-01/external_vs_inhouse.png',
+  'tools_overview': 'imgs/courses/ai-between-dimensions/lesson-01/tools_overview.png',
+  'tools_table': 'imgs/courses/ai-between-dimensions/lesson-01/tools_table.png',
+  'tools_comparison_img': 'imgs/courses/ai-between-dimensions/lesson-01/tools_comparison_img.png',
+  'render_tools_comparison': 'imgs/courses/ai-between-dimensions/lesson-01/render_tools_comparison.png',
+  'depth_from_image': 'imgs/courses/ai-between-dimensions/lesson-01/depth_from_image.png',
+  'nerf_example': 'imgs/courses/ai-between-dimensions/lesson-01/nerf_example.png',
+  'sketch_tips': 'imgs/courses/ai-between-dimensions/lesson-01/sketch_tips.png',
+  'sketch_vs_photo': 'imgs/courses/ai-between-dimensions/lesson-01/sketch_vs_photo.png',
+  'sketch_to_3d_workflow': 'imgs/courses/ai-between-dimensions/lesson-01/sketch_to_3d_workflow.png',
+  'tripo_demo': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_demo.png',
+  'tripo_interface': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_interface.png',
+  'tripo_floorplan': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_floorplan.png',
+  'tripo_mesh_full': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_mesh_full.png',
+  'tripo_texture': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_texture.png',
+  'tripo_vs_claude': 'imgs/courses/ai-between-dimensions/lesson-01/tripo_vs_claude.png',
+  'rhino_polysurface': 'imgs/courses/ai-between-dimensions/lesson-01/rhino_polysurface.png',
+  'claude_3d_interactive': 'imgs/courses/ai-between-dimensions/lesson-01/claude_3d_interactive.png',
+  'claude_obj_download': 'imgs/courses/ai-between-dimensions/lesson-01/claude_obj_download.png',
+  'nano_banana_facade': 'imgs/courses/ai-between-dimensions/lesson-01/nano_banana_facade.png',
+  'nano_banana_full': 'imgs/courses/ai-between-dimensions/lesson-01/nano_banana_full.png',
+  'planner_coohom': 'imgs/courses/ai-between-dimensions/lesson-01/planner_coohom.png',
+  'coohom_upload': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_upload.png',
+  'coohom_3d': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_3d.png',
+  'coohom_furniture': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_furniture.png',
+  'coohom_render': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_render.png',
+  'coohom_rooms': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_rooms.png',
+  'coohom_style': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_style.png',
+  'coohom_import': 'imgs/courses/ai-between-dimensions/lesson-01/coohom_import.png',
+  'homework': 'imgs/courses/ai-between-dimensions/lesson-01/homework.png',
+  'tripo_segmentation': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_segmentation.png',
+  'tripo_merge': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_merge.png',
+  'tripo_add_part': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_add_part.png',
+  'tripo_parts_completion': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_parts_completion.png',
+  'tripo_texture_edit': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_texture_edit.png',
+  'tripo_texture_edit2': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_texture_edit2.png',
+  'tripo_rhino_export': 'imgs/courses/ai-between-dimensions/lesson-02/tripo_rhino_export.png',
+  '3d_to_3d_concept': 'imgs/courses/ai-between-dimensions/lesson-02/3d_to_3d_concept.png',
+  '3d_to_3d_why': 'imgs/courses/ai-between-dimensions/lesson-02/3d_to_3d_why.png',
+  'rodin_home': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_home.png',
+  'rodin_upload': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_upload.png',
+  'rodin_sculpt': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_sculpt.png',
+  'rodin_quality': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_quality.png',
+  'rodin_geometry': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_geometry.png',
+  'rodin_geometry2': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_geometry2.png',
+  'rodin_nano': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_nano.png',
+  'rodin_material': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_material.png',
+  'rodin_rhino1': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_rhino1.png',
+  'rodin_rhino2': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_rhino2.png',
+  'rodin_rhino3': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_rhino3.png',
+  'rodin_rhino4': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_rhino4.png',
+  'rodin_rhino5': 'imgs/courses/ai-between-dimensions/lesson-02/rodin_rhino5.png',
+  'workflow_tools': 'imgs/courses/ai-between-dimensions/lesson-02/workflow_tools.png',
+  'workflows_agenda': 'imgs/courses/ai-between-dimensions/lesson-02/workflows_agenda.png',
+  'workflows_when': 'imgs/courses/ai-between-dimensions/lesson-02/workflows_when.png',
+  'grasshopper_visual': 'imgs/courses/ai-between-dimensions/lesson-02/grasshopper_visual.png',
+  'comfyui_interface': 'imgs/courses/ai-between-dimensions/lesson-02/comfyui_interface.png',
+  'comfyui_pros': 'imgs/courses/ai-between-dimensions/lesson-02/comfyui_pros.png',
+  'comfyui_workflow': 'imgs/courses/ai-between-dimensions/lesson-02/comfyui_workflow.png',
+  'weavy_home': 'imgs/courses/ai-between-dimensions/lesson-02/weavy_home.png',
+  'weavy_workflow': 'imgs/courses/ai-between-dimensions/lesson-02/weavy_workflow.png',
+  'weavy_image2_3d': 'imgs/courses/ai-between-dimensions/lesson-02/weavy_image2_3d.png',
+  'weavy_pros': 'imgs/courses/ai-between-dimensions/lesson-02/weavy_pros.png',
+  'xfigura_boards': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_boards.png',
+  'xfigura_canvas': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_canvas.png',
+  'xfigura_home': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_home.png',
+  'xfigura_model_select': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_model_select.png',
+  'xfigura_3d_result': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_3d_result.png',
+  'xfigura_add_node': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_add_node.png',
+  'xfigura_nodes': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_nodes.png',
+  'xfigura_templates': 'imgs/courses/ai-between-dimensions/lesson-02/xfigura_templates.png',
+  'lesson2_agenda': 'imgs/courses/ai-between-dimensions/lesson-02/lesson2_agenda.png',
+  'lesson2_homework': 'imgs/courses/ai-between-dimensions/lesson-02/lesson2_homework.png',
+  'meshy_demo': 'imgs/tools/meshy_demo.png',
+  // ── שיעור 3 ──
+  'lesson03_01': 'imgs/courses/ai-between-dimensions/lesson-03/img (1).jpg',
+  'lesson03_02': 'imgs/courses/ai-between-dimensions/lesson-03/img (2).jpg',
+  'lesson03_03': 'imgs/courses/ai-between-dimensions/lesson-03/img (3).jpg',
+  'lesson03_04': 'imgs/courses/ai-between-dimensions/lesson-03/img (4).jpg',
+  'lesson03_05': 'imgs/courses/ai-between-dimensions/lesson-03/img (5).jpg',
+  'lesson03_06': 'imgs/courses/ai-between-dimensions/lesson-03/img (6).jpg',
+  'lesson03_07': 'imgs/courses/ai-between-dimensions/lesson-03/img (7).jpg',
+  'lesson03_08': 'imgs/courses/ai-between-dimensions/lesson-03/img (8).jpg',
+  'lesson03_09': 'imgs/courses/ai-between-dimensions/lesson-03/img (9).jpg',
+  'lesson03_10': 'imgs/courses/ai-between-dimensions/lesson-03/img (10).jpg',
+  'lesson03_11': 'imgs/courses/ai-between-dimensions/lesson-03/img (11).jpg',
+  'lesson03_12': 'imgs/courses/ai-between-dimensions/lesson-03/img (12).jpg',
+  'lesson03_13': 'imgs/courses/ai-between-dimensions/lesson-03/img (13).jpg',
+  'lesson03_14': 'imgs/courses/ai-between-dimensions/lesson-03/img (14).jpg',
+  'lesson03_15': 'imgs/courses/ai-between-dimensions/lesson-03/img (15).jpg',
+  'lesson03_16': 'imgs/courses/ai-between-dimensions/lesson-03/img (16).jpg',
+  'lesson03_17': 'imgs/courses/ai-between-dimensions/lesson-03/img (17).jpg',
+  // ── ArcGIS AI 2026 ──
+  'arcgis_01': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (1).jpg',
+  'arcgis_02': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (2).jpg',
+  'arcgis_03': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (3).jpg',
+  'arcgis_04': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (4).jpg',
+  'arcgis_05': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (5).jpg',
+  'arcgis_06': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (6).jpg',
+  'arcgis_07': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (7).jpg',
+  'arcgis_08': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (8).jpg',
+  'arcgis_09': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (9).jpg',
+  'arcgis_10': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (10).jpg',
+  'arcgis_11': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (11).jpg',
+  'arcgis_12': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (12).jpg',
+  'arcgis_13': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (13).jpg',
+  'arcgis_14': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (14).jpg',
+  'arcgis_15': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (15).jpg',
+  'arcgis_16': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (16).jpg',
+  'arcgis_17': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (17).jpg',
+  'arcgis_18': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (18).jpg',
+  'arcgis_19': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (19).jpg',
+  'arcgis_20': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (20).jpg',
+  'arcgis_21': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (21).jpg',
+  'arcgis_22': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (22).jpg',
+  'arcgis_23': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (23).jpg',
+  'arcgis_24': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (24).jpg',
+  'arcgis_25': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (25).jpg',
+  'arcgis_26': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (26).jpg',
+  'arcgis_27': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (27).jpg',
+  'arcgis_28': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (28).jpg',
+  'arcgis_29': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (29).jpg',
+  'arcgis_30': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (30).jpg',
+  'arcgis_31': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (31).jpg',
+  'arcgis_32': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (32).jpg',
+  'arcgis_33': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (33).jpg',
+  'arcgis_34': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (34).jpg',
+  'arcgis_35': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (35).jpg',
+  'arcgis_36': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (36).jpg',
+  'arcgis_37': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (37).jpg',
+  'arcgis_38': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (38).jpg',
+  'arcgis_39': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (39).jpg',
+  'arcgis_40': 'imgs/courses/ArcGIS-AI/ArcGIS-AI (40).jpg',
+};
+
+var IMG_PATH = 'imgs/';
+var _state = {page:'home', toolId:null, lessonId:null};
+var _wiz = {q1:null, q2:null};
+
+function img(key) {
+  if (!key) return null;
+  if (IMG_MAP[key]) return IMG_MAP[key];
+  return IMG_PATH + key + '.png';
+}
+
+function imgBox(key, cap) {
+  if (!key) return '';
+  var src = img(key);
+  return '<div class="step-img-box" onclick="openLightbox(\'' + src + '\')">'
+    + '<img src="' + src + '" alt="' + (cap||'') + '" loading="lazy">'
+    + (cap ? '<div class="step-img-cap">' + cap + '</div>' : '')
+    + '</div>';
+}
+
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function imgBoxFull(key, cap, textDesc, action) {
+  if (!key) return '';
+  var src = img(key);
+  var click = 'onclick="openLightbox(\'' + src + '\')"';
+  if (textDesc) {
+    // טקסט מעל, תמונה מתחת ברוחב מלא
+    return '<div class="less-img-block">'
+      + '<div class="less-img-block-text">'
+      + (cap ? '<div class="less-img-block-title">' + cap + '</div>' : '')
+      + '<div class="less-img-block-desc">' + textDesc + '</div>'
+      + (action ? '<div class="less-img-block-action">' + action + '</div>' : '')
+      + '</div>'
+      + '<div class="less-img-block-img" ' + click + '>'
+      + '<img src="' + src + '" alt="' + (cap||'') + '" loading="lazy">'
+      + (cap ? '<div class="less-img-block-cap">' + cap + '</div>' : '')
+      + '</div>'
+      + '</div>';
+  } else {
+    return '<div class="less-img-wrap" ' + click + '>'
+      + '<img src="' + src + '" alt="' + (cap||'') + '" loading="lazy">'
+      + (cap ? '<div class="less-img-cap">' + cap + '</div>' : '')
+      + '</div>';
+  }
+}
+
+function catColor(catId) {
+  var c = CATS.find(function(x){return x.id===catId;});
+  return c ? c.color : 'var(--ink-light)';
+}
+
+function toolById(id) {
+  return TOOLS.find(function(t){return t.id===id;});
+}
+
+// ── BUILD SIDEBAR ──
+function buildSidebar() {
+  var ta = document.getElementById('sb-tools-area');
+  var ca = document.getElementById('sb-courses-area');
+  var html = '';
+  CATS.forEach(function(cat) {
+    var tools = TOOLS.filter(function(t){return t.cat===cat.id && !t.parent;});
+    if (!tools.length) return;
+    html += '<div class="sb-sec">' + cat.label + '</div>';
+    tools.forEach(function(t) {
+      html += '<div class="sb-item" id="sb-' + t.id + '" onclick="goTool(\'' + t.id + '\')">'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>'
+        + t.name
+        + (t.starred ? '<span class="sb-star">⭐</span>' : '')
+        + '</div>';
+      var subs = TOOLS.filter(function(s){return s.parent===t.id;});
+      subs.forEach(function(s) {
+        html += '<div class="sb-sub" onclick="goTool(\'' + s.id + '\')">' + s.name + '</div>';
+      });
+    });
+  });
+  ta.innerHTML = html;
+
+  var ch = '<div class="sb-sec">קורסים</div>';
+  ch += '<div class="sb-item" id="sb-lessons" onclick="goLessons()">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+    + 'AI Between Dimensions'
+    + '</div>';
+  ch += '<div class="sb-item" id="sb-arcgis" onclick="goArcgis()">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'
+    + 'ArcGIS AI 2026'
+    + '</div>';
+  ca.innerHTML = ch;
+}
+
+// ── BUILD HOME ──
+function buildHome() {
+  var fg = document.getElementById('fav-grid');
+  var starred = TOOLS.filter(function(t){return t.starred;}).slice(0,6);
+  fg.innerHTML = starred.map(function(t) {
+    var cc = catColor(t.cat);
+    var cat = CATS.find(function(c){return c.id===t.cat;});
+    return '<div class="fav-card" onclick="goTool(\'' + t.id + '\')">'
+      + '<div class="fav-name">' + t.name + '</div>'
+      + '<div class="fav-desc">' + t.desc.substring(0,60) + (t.desc.length>60?'…':'') + '</div>'
+      + '<span class="fav-cat" style="background:' + cc + '22;color:' + cc + ';border:1px solid ' + cc + '44">' + (cat?cat.label:'') + '</span>'
+      + '</div>';
+  }).join('');
+
+  var cl = document.getElementById('course-list');
+  cl.innerHTML = '<div class="course-row" onclick="goLessons()">'
+    + '<div><div class="course-name">AI Between Dimensions</div>'
+    + '<div class="course-meta">דור נצר + ענת שטיבלמן · 5 שיעורים · ' + LESSONS.filter(function(l){return l.status==='done';}).length + ' הושלמו</div></div>'
+    + '<span class="badge active">פעיל</span>'
+    + '</div>'
+    + '<div class="course-row" onclick="goArcgis()">'
+    + '<div><div class="course-name">ArcGIS AI 2026</div>'
+    + '<div class="course-meta">סיסטמטיקס + Esri · כנס · 28.6.2026</div></div>'
+    + '<span class="badge active">הושלם</span>'
+    + '</div>';
+}
+
+// ── RENDER GUIDE ──
+function renderPrompt(p, idx) {
+  // p = {title, code, note}
+  var uid = 'pr_' + Math.random().toString(36).substr(2,6);
+  // הדגשת [משתנים] בקוד
+  var coded = p.code.replace(/\[([^\]]+)\]/g, '<span class="var">[$1]</span>');
+  var raw = p.code.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return '<div class="prompt-box">'
+    + '<div class="prompt-hdr" onclick="togglePrompt(\'' + uid + '\')">'
+    + '<span class="prompt-tag">PROMPT</span>'
+    + '<span class="prompt-title">' + (p.title || 'פרומפט לדוגמה') + '</span>'
+    + '<svg class="prompt-chev" id="pc_' + uid + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'
+    + '</div>'
+    + '<div class="prompt-body" id="pb_' + uid + '">'
+    + '<div class="prompt-code" id="prc_' + uid + '" data-raw="' + raw + '">' + coded + '</div>'
+    + '<div class="prompt-actions">'
+    + '<span class="prompt-note">' + (p.note || 'החלף את [המשתנים] בנתונים של הפרויקט שלך') + '</span>'
+    + '<button class="prompt-copy" onclick="copyPrompt(\'' + uid + '\', this)">העתק</button>'
+    + '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function togglePrompt(uid) {
+  var b = document.getElementById('pb_' + uid);
+  var c = document.getElementById('pc_' + uid);
+  var o = b.classList.toggle('open');
+  if (c) c.classList.toggle('open', o);
+}
+
+function copyPrompt(uid, btn) {
+  var el = document.getElementById('prc_' + uid);
+  if (!el) return;
+  var text = el.getAttribute('data-raw').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent = '✓ הועתק';
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'העתק'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function renderGuide(gid, embed) {
+  var g = GUIDES[gid];
+  if (!g) return '<p style="color:var(--ink-light);font-size:12px">מדריך בקרוב</p>';
+  var html = '';
+  if (!embed) {
+    // סטטוס "מתודולוגיה בפיתוח" — אופציונלי
+    if (g.status) {
+      html += '<div class="guide-status">'
+        + '<div class="guide-status-icon">🔄</div>'
+        + '<div class="guide-status-text">' + g.status + '</div>'
+        + '</div>';
+    }
+    html += '<div class="guide-intro"><p>' + g.intro.replace(/\n/g,'<br><br>') + '</p></div>';
+    // בלוק "לימוד לפני ביצוע" — אופציונלי
+    if (g.learnFirst) {
+      html += '<div class="learn-first">'
+        + '<div class="learn-first-title">' + (g.learnFirst.title || 'לימוד לפני ביצוע') + '</div>'
+        + '<div class="learn-first-body">' + g.learnFirst.body.replace(/\n/g,'<br><br>') + '</div>'
+        + (g.learnFirst.stop ? '<div class="learn-first-stop">' + g.learnFirst.stop + '</div>' : '')
+        + '</div>';
+    }
+    html += '<div class="steps-label">שלב אחר שלב</div>';
+    g.steps.forEach(function(s, i) {
+      html += '<div class="step">';
+      html += '<div>';
+      html += '<div class="step-n">שלב ' + (i+1) + '</div>';
+      html += '<div class="step-t">' + s.title + '</div>';
+      html += '<div class="step-d">' + s.desc + '</div>';
+      if (s.path && s.path.length) {
+        html += '<span class="step-path">' + s.path.join(' ← ') + '</span>';
+      }
+      if (s.code) {
+        html += '<div class="step-code">' + s.code + '</div>';
+      }
+      if (s.tip) {
+        html += '<div class="step-tip ' + (s.tipType||'terra') + '">' + s.tip + '</div>';
+      }
+      if (s.seeDo) {
+        html += '<div class="step-seedoo">'
+          + '<div class="step-seedoo-row"><span class="sd-label">רואים:</span><span class="sd-text">' + s.seeDo.see + '</span></div>'
+          + '<div class="step-seedoo-row"><span class="sd-label">עושים:</span><span class="sd-text">' + s.seeDo.do + '</span></div>'
+          + '</div>';
+      }
+      // פרומפט/ים מתקפלים
+      if (s.prompts && s.prompts.length) {
+        s.prompts.forEach(function(p, pi){ html += renderPrompt(p, pi); });
+      }
+      html += '</div>';
+      html += '<div>' + imgBox(s.img, s.imgCap) + '</div>';
+      html += '</div>';
+    });
+  } else {
+    // embed mode — תמציתי
+    html += '<div class="emb-step" style="background:var(--bg-panel);padding:10px 14px;font-size:12px;color:var(--ink-mid);border-bottom:1px solid var(--border)">' + g.intro.substring(0,120) + (g.intro.length>120?'…':'') + '</div>';
+    g.steps.forEach(function(s, i) {
+      html += '<div class="emb-step"><span class="emb-sn">שלב '+(i+1)+'</span><span>' + s.title + ' — ' + s.desc + '</span></div>';
+    });
+    html += '<div class="src-note">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+      + 'עריכה מרכזית אחת — מתעדכן בכל מקום'
+      + '</div>';
+  }
+  return html;
+}
+
+// ── BUILD TOOL PAGE ──
+function buildToolPage(toolId) {
+  var t = toolById(toolId);
+  if (!t) return;
+  var catLabel = (CATS.find(function(c){return c.id===t.cat;})||{}).label || 'כלים';
+  var html = '<div class="tool-header">';
+  html += '<div class="eyebrow">' + catLabel + ' · מדריך כלים</div>';
+  html += '<div class="terra-line"></div>';
+  html += '<h2>' + t.name + '</h2>';
+  html += '<p>' + t.desc + '</p>';
+  html += '<div class="meta-chips">';
+  html += '<span class="chip price">' + t.price + '</span>';
+  (t.strengths||[]).forEach(function(s){ html += '<span class="chip str">✓ ' + s + '</span>'; });
+  (t.weaknesses||[]).forEach(function(w){ html += '<span class="chip weak">✗ ' + w + '</span>'; });
+  html += '</div></div>';
+  html += '<div class="divider"></div>';
+
+  // אסוף מדריכים מהכלי + מ-sub-tools
+  var allGuides = [];
+  (t.guides||[]).forEach(function(g){ allGuides.push({g:g, sub:null}); });
+  var subTools = TOOLS.filter(function(s){return s.parent===toolId;});
+  subTools.forEach(function(sub){
+    // כרטיס sub-tool בולט
+    html += '<div class="sub-tool-card">';
+    html += '<div class="sub-tool-hdr">';
+    html += '<div class="sub-tool-tag">כלי משנה</div>';
+    html += '<div class="sub-tool-name">' + sub.name + '</div>';
+    html += '<div class="sub-tool-actions">';
+    html += '<span class="sub-tool-btn" onclick="goTool(\'' + sub.id + '\')">פתח דף נפרד ←</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="sub-tool-desc">' + sub.desc + '</div>';
+    html += '</div>';
+    (sub.guides||[]).forEach(function(g){ allGuides.push({g:g, sub:sub}); });
+  });
+
+  // קבץ מדריכים לפי cat (כולל sub-tools)
+  var cats = {};
+  allGuides.forEach(function(item) {
+    var g = item.g;
+    var c = item.sub ? (item.sub.name + ' · ' + (g.cat||'כללי')) : (g.cat || 'כללי');
+    if (!cats[c]) cats[c] = [];
+    cats[c].push({g:g, sub:item.sub});
+  });
+  var catKeys = Object.keys(cats);
+  if (!catKeys.length) {
+    html += '<p style="color:var(--ink-light);font-size:13px">מדריכים בקרוב.</p>';
+  }
+  catKeys.forEach(function(catKey, ci) {
+    html += '<div class="cat-section">';
+    html += '<div class="cat-label">' + catKey + '</div>';
+    cats[catKey].forEach(function(item, gi) {
+      var g = item.g;
+      var uid = 'g_' + toolId + '_' + ci + '_' + gi;
+      html += '<div class="guide-card">';
+      html += '<div class="guide-hdr" onclick="toggleGuide(\'' + uid + '\')">';
+      html += '<span class="g-num">0' + (gi+1) + '</span>';
+      html += '<span class="g-name">' + g.label + '</span>';
+      if (g.soon) html += '<span class="g-soon">בקרוב</span>';
+      html += '<svg class="g-chev" id="gc_' + uid + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+      html += '</div>';
+      html += '<div class="guide-body" id="gb_' + uid + '">';
+      html += g.soon ? '<div style="padding:12px 15px;font-size:12px;color:var(--ink-light)">מדריך זה יתווסף בקרוב.</div>' : renderGuide(g.id, false);
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('tool-content').innerHTML = html;
+}
+
+// ── BUILD LESSONS ──
+function buildLessonsPage() {
+  var html = '<div class="eyebrow">קורסים · AI Between Dimensions</div>'
+    + '<div class="terra-line"></div>';
+  LESSONS.forEach(function(l) {
+    var numClass = l.type==='dor' ? 'less-num dor' : (l.type==='anat' ? 'less-num anat' : 'less-num');
+    var statusBadge = l.status==='done' ? '<span class="badge active">הושלם</span>' : '<span class="badge soon">בקרוב</span>';
+    html += '<div class="lesson-card">';
+    html += '<div class="less-hdr" onclick="toggleLesson(\'' + l.id + '\')">';
+    html += '<div class="less-meta">';
+    html += '<span class="' + numClass + '">שיעור ' + l.num + '</span>';
+    html += '<span class="less-by">' + l.instructor + (l.date && l.date!=='--' ? ' · ' + l.date : '') + '</span>';
+    html += statusBadge;
+    html += '</div>';
+    html += '<div class="less-title">' + l.title + '</div>';
+    if (l.tools.length) {
+      html += '<div class="less-tools">';
+      l.tools.forEach(function(tid) {
+        var tt = toolById(tid);
+        html += '<span class="t-pill">' + (tt?tt.name:tid) + '</span>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '<div class="less-body" id="lb_' + l.id + '">';
+    if (!l.summary.length) {
+      html += '<div class="less-content"><p style="font-size:13px;color:var(--ink-light)">סיכום השיעור יתווסף לאחר לימודו.</p></div>';
+    } else {
+      html += '<div class="less-content">';
+      l.summary.forEach(function(item, idx) {
+        if (item.t === 'text') {
+          html += '<p class="less-text">' + item.content + '</p>';
+        } else if (item.t === 'section') {
+          html += '<div class="less-section">'
+            + '<div class="less-section-line"></div>'
+            + '<div class="less-section-title">' + item.title + '</div>'
+            + '<div class="less-section-line"></div>'
+            + '</div>';
+        } else if (item.t === 'img') {
+          html += imgBoxFull(item.key, item.cap, item.desc||null, item.action||null);
+        } else if (item.t === 'guide') {
+          var g = GUIDES[item.gid];
+          var uid = 'emb_' + l.id + '_' + idx;
+          html += '<div class="embed">';
+          html += '<div class="emb-hdr" onclick="toggleEmbed(\'' + uid + '\')">';
+          html += '<span class="emb-tag">מדריך</span>';
+          html += '<span class="emb-name">' + (g?g.title:item.gid) + '</span>';
+          html += '<span class="emb-from">' + (item.note||'') + '</span>';
+          html += '<svg class="emb-chev" id="ec_' + uid + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>';
+          html += '</div>';
+          html += '<div class="emb-body" id="eb_' + uid + '">';
+          html += renderGuide(item.gid, true);
+          html += '</div>';
+          html += '</div>';
+        }
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+  });
+  document.getElementById('lessons-content').innerHTML = html;
+}
+
+// ── NAVIGATION ──
+function setBC(parts) {
+  var el = document.getElementById('breadcrumb');
+  var html = '<span class="bc-link" onclick="goHome()">🏠 בית</span>';
+  parts.forEach(function(p, i) {
+    html += '<span class="bc-sep"> / </span>';
+    if (i < parts.length-1) html += '<span class="bc-link">' + p + '</span>';
+    else html += '<span class="bc-cur">' + p + '</span>';
+  });
+  el.innerHTML = html;
+}
+
+function showPanel(id, title, bc) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('topbar-title').textContent = title;
+  setBC(bc);
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+}
+
+function goHome() {
+  showPanel('home','בית',[]);
+  _state.page = 'home';
+}
+
+function goTool(id) {
+  _state.toolId = id;
+  _state.page = 'tool';
+  var t = toolById(id);
+  if (!t) return;
+  buildToolPage(id);
+  var catLabel = (CATS.find(function(c){return c.id===t.cat;})||{}).label || 'כלים';
+  showPanel('tool', t.name, [catLabel, t.name]);
+  var sbEl = document.getElementById('sb-' + id);
+  if (sbEl) sbEl.classList.add('active');
+}
+
+function goLessons() {
+  _state.page = 'lessons';
+  buildLessonsPage();
+  showPanel('lessons','AI Between Dimensions',['קורסים','AI Between Dimensions']);
+  var sbEl = document.getElementById('sb-lessons');
+  if (sbEl) sbEl.classList.add('active');
+}
+
+// ── TOGGLES ──
+function toggleGuide(uid) {
+  var b = document.getElementById('gb_' + uid);
+  var c = document.getElementById('gc_' + uid);
+  var open = b.classList.toggle('open');
+  if (c) c.classList.toggle('open', open);
+}
+
+function toggleLesson(id) {
+  document.getElementById('lb_' + id).classList.toggle('open');
+}
+
+function toggleEmbed(uid) {
+  var b = document.getElementById('eb_' + uid);
+  var c = document.getElementById('ec_' + uid);
+  var open = b.classList.toggle('open');
+  if (c) c.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+// ── WIZARD ──
+function wizSel(q, val, el) {
+  var grp = q===1 ? 'wq1' : 'wq2';
+  document.querySelectorAll('#' + grp + ' .wiz-opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  _wiz['q'+q] = val;
+  if (q===1) {
+    document.getElementById('wq2-wrap').style.display = 'block';
+    document.getElementById('wiz-result').classList.remove('show');
+    _wiz.q2 = null;
+  }
+  if (q===2) {
+    showWizResult();
+  }
+}
+
+function showWizResult() {
+  var key = _wiz.q1 + '_' + _wiz.q2;
+  var recs = WIZARD_MATRIX[key] || [];
+  var html = '';
+  if (!recs.length) {
+    html = '<p style="font-size:12px;color:var(--ink-light)">לא נמצאה המלצה מדויקת — נסה שילוב אחר.</p>';
+  } else {
+    recs.forEach(function(r) {
+      var t = toolById(r.tid);
+      if (!t) return;
+      html += '<div class="wiz-rec">';
+      html += '<div class="wiz-rec-info"><div class="wiz-rec-name">' + t.name + '</div>'
+        + '<div class="wiz-rec-desc">' + r.tag + (r.rank ? ' — ' + r.rank : '') + '</div></div>';
+      html += '<div class="wiz-rec-btn" onclick="goTool(\'' + r.tid + '\')">' + (r.gid ? 'פתח מדריך' : 'לכלי') + ' ←</div>';
+      html += '</div>';
+    });
+  }
+  document.getElementById('wiz-recs').innerHTML = html;
+  document.getElementById('wiz-result').classList.add('show');
+}
+
+// ── ArcGIS COURSE PAGE ──
+function buildArcgisPage() {
+  var html = '<div class="eyebrow">כנסים · ArcGIS AI 2026</div>'
+    + '<div class="terra-line"></div>';
+  LESSONS_ARCGIS.forEach(function(l) {
+    html += '<div class="lesson-card">';
+    html += '<div class="less-hdr" onclick="toggleLesson(\'' + l.id + '\')">';
+    html += '<div class="less-meta">';
+    html += '<span class="less-num">' + l.date + '</span>';
+    html += '<span class="less-by">' + l.instructor + '</span>';
+    html += '<span class="badge active">הושלם</span>';
+    html += '</div>';
+    html += '<div class="less-title">' + l.title + '</div>';
+    html += '<p style="font-size:12px;color:var(--ink-light);margin-top:4px;direction:rtl;text-align:right">' + l.desc + '</p>';
+    html += '</div>';
+    html += '<div class="less-body" id="lb_' + l.id + '">';
+    html += '<div class="less-content">';
+    l.summary.forEach(function(item) {
+      if (item.t === 'text') {
+        html += '<p class="less-text">' + item.content + '</p>';
+      } else if (item.t === 'section') {
+        html += '<div class="less-section">'
+          + '<div class="less-section-line"></div>'
+          + '<div class="less-section-title">' + item.title + '</div>'
+          + '<div class="less-section-line"></div>'
+          + '</div>';
+      } else if (item.t === 'img') {
+        html += imgBoxFull(item.key, item.cap, item.desc || null, item.action || null);
+      }
+    });
+    html += '</div></div></div>';
+  });
+  document.getElementById('lessons-content').innerHTML = html;
+}
+
+function goArcgis() {
+  _state.page = 'arcgis';
+  buildArcgisPage();
+  showPanel('lessons', 'ArcGIS AI 2026', ['כנסים', 'ArcGIS AI 2026']);
+  var sbEl = document.getElementById('sb-arcgis');
+  if (sbEl) sbEl.classList.add('active');
+}
+
+// ── INIT ──
+buildSidebar();
+buildHome();
+</script>
+</body>
+</html>
