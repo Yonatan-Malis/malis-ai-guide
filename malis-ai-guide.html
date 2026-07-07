@@ -12,45 +12,59 @@
    תואם malis-design-system.md גרסה 1.0
    ═══════════════════════════════════════════ */
 :root {
-  /* טוקנים משותפים — זהים בכל הסביבות */
-  --terra:      #C4845A;   /* TERRA — אקסנט בלבד, אסור על כותרות */
-  --terra-l:    #F0DDD0;   /* TERRA_L */
-  --terra-pale: #FAF4EF;   /* שימוש פנימי לכלי */
-  --terra-mid:  #f0d8ca;
-  --ink:        #1A1714;   /* INK — כותרות בלבד */
-  --ink-soft:   #2A2520;   /* INK_SOFT */
-  --ink-mid:    #4a4540;   /* SECONDARY */
-  --ink-light:  #6B6355;   /* MUTED */
-  --off-white:  #F8F6F3;   /* OFF_W */
-  --grey:       #E8E4DE;   /* GREY */
-  --body:       #3A3530;   /* BODY */
-  /* צבעי כלים וממשקים — 6ב */
-  --warm-stone: #EAE5DD;   /* WARM_STONE — sidebar · כרטיסים */
-  --bg-warm:    #F5F1EC;   /* BG_WARM — רקע ראשי */
-  /* צבעי פלטפורמות AI */
-  --slate:      #6E8BA3;   /* dor */
-  --slate-pale: #E6F1FB;
-  --sage:       #7A9080;   /* anat */
-  --sage-pale:  #EAF3DE;
-  --sand:       #BDB5A4;
-  --sand-pale:  #F5F2ED;
-  --purple:     #7B5EA7;   /* Visual Scripting */
-  --purple-pale:#F0EBF8;
-  /* מערכת */
-  --border:     rgba(26,23,20,0.1);
-  --border-mid: rgba(26,23,20,0.18);
-  --bg:         #FDFBF9;
-  --bg-panel:   var(--bg-warm);
-  --radius:     8px;
-  --radius-lg:  12px;
-  --sans:       'Assistant','Arial Hebrew',Arial,sans-serif;
+  /* ── פלטה 2026 ── */
+  --terra:        #C47F6B;   /* Clay Rose — אקסנט ראשי */
+  --terra-l:      #F0DDD8;
+  --terra-pale:   #F5EDE9;
+  --terra-mid:    #ECDDD8;
+
+  --ink:          #1C1A17;
+  --ink-mid:      #4A4540;
+  --ink-light:    #7A7068;
+  --ink-muted:    #9A9088;
+
+  /* רקע */
+  --bg:           #FDFBF8;
+  --bg-panel:     #FDFBF8;   /* sidebar = רקע */
+  --border:       #E4DED6;
+  --border-mid:   #D4CEC6;
+
+  /* קטגוריות — פלטת 2026 */
+  --cat-general:      #F5EDE9; --cat-general-icon: #ECDDD8; --cat-general-text: #C47F6B;
+  --cat-gis:          #E6EDF4; --cat-gis-icon:     #D0DCEB; --cat-gis-text:     #2F4B63;
+  --cat-3d:           #EEF3EB; --cat-3d-icon:      #D8E8D2; --cat-3d-text:      #5A7A4E;
+  --cat-2d:           #F7F1E6; --cat-2d-icon:      #EDE0C4; --cat-2d-text:      #7A6030;
+  --cat-workflows:    #E8F3F2; --cat-workflows-icon:#CEEAE8;--cat-workflows-text:#3A7A78;
+  --cat-interior:     #F0ECF5; --cat-interior-icon: #E0D4EE;--cat-interior-text: #6B4A8A;
+  --cat-base:         #F7F3E6; --cat-base-icon:     #EDE0C0; --cat-base-text:    #7A6030;
+
+  /* hero */
+  --hero-bg:      #2F4B63;   /* Dusk Denim */
+  --hero-accent:  #A8C7C5;   /* Seafoam Mist */
+
+  /* legacy */
+  --warm-stone:   #F0EBE4;
+  --off-white:    #F8F6F3;
+  --grey:         #E4DED6;
+  --slate:        #2F4B63;
+  --slate-pale:   #E6EDF4;
+  --sage:         #5A7A4E;
+  --sage-pale:    #EEF3EB;
+  --purple:       #6B4A8A;
+  --purple-pale:  #F0ECF5;
+  --sand:         #A0907E;
+  --sand-pale:    #F7F1E6;
+
+  --radius:       8px;
+  --radius-lg:    12px;
+  --sans:         'Assistant','Arial Hebrew',Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Assistant',sans-serif;background:var(--bg);color:var(--ink);direction:rtl;font-size:15px;line-height:1.5;}
 
 /* ── LAYOUT ── */
 .app{display:flex;height:100vh;overflow:hidden;}
-.sidebar{order:1;width:200px;background:var(--bg-panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
+.sidebar{order:1;width:200px;background:var(--bg);border-left:0.5px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
 .main{order:2;flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 
 /* ── SIDEBAR ── */
@@ -125,28 +139,45 @@ body{font-family:'Assistant',sans-serif;background:var(--bg);color:var(--ink);di
 .home-greeting{font-size:22px;font-weight:300;color:var(--ink);margin-bottom:20px;}
 .home-greeting strong{font-weight:600;color:var(--terra);}
 
-.wizard-card{background:var(--warm-stone);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:24px;}
-.wiz-title{font-size:16px;font-weight:500;color:var(--ink);margin-bottom:3px;}
-.wiz-sub{font-size:12px;color:var(--ink-light);margin-bottom:16px;}
-.wiz-q-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:8px;}
+.wizard-card{background:var(--hero-bg);border:none;border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:24px;}
+.wiz-title{font-size:16px;font-weight:500;color:#fff;margin-bottom:3px;}
+.wiz-sub{font-size:12px;color:var(--hero-accent);margin-bottom:16px;}
+.wiz-q-label{font-size:12px;font-weight:500;color:var(--hero-accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;}
 .wiz-opts{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
-.wiz-opt{padding:6px 14px;font-size:12px;border:1px solid var(--border-mid);border-radius:20px;cursor:pointer;color:var(--ink-mid);background:var(--bg);transition:all .15s;}
-.wiz-opt:hover,.wiz-opt.sel{background:var(--terra-pale);color:var(--terra);border-color:var(--terra);}
+.wiz-opt{padding:6px 14px;font-size:12px;border:0.5px solid rgba(168,199,197,.3);border-radius:20px;cursor:pointer;color:#E2C9A6;background:rgba(255,255,255,.07);transition:all .15s;}
+.wiz-opt:hover,.wiz-opt.sel{background:var(--terra);color:#fff;border-color:var(--terra);}
 .wiz-q2-wrap{display:none;}
-.wiz-result{display:none;background:var(--terra-pale);border:1px solid var(--terra);border-radius:var(--radius);padding:12px 16px;margin-top:4px;}
+.wiz-result{display:none;background:rgba(255,255,255,.08);border:0.5px solid rgba(168,199,197,.3);border-radius:var(--radius);padding:12px 16px;margin-top:4px;}
 .wiz-result.show{display:block;}
-.wiz-res-label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--terra);margin-bottom:10px;}
-.wiz-rec{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--terra-mid);}
+.wiz-res-label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--hero-accent);margin-bottom:10px;}
+.wiz-rec{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid rgba(168,199,197,.2);}
 .wiz-rec:last-child{border-bottom:none;}
 .wiz-rec-info{}
-.wiz-rec-name{font-size:13px;font-weight:500;color:var(--ink);}
-.wiz-rec-desc{font-size:11px;color:var(--ink-mid);margin-top:1px;}
-.wiz-rec-btn{font-size:11px;color:var(--terra);cursor:pointer;padding:4px 11px;border:1px solid var(--terra);border-radius:20px;white-space:nowrap;transition:all .15s;flex-shrink:0;margin-right:8px;}
-.wiz-rec-btn:hover{background:var(--terra);color:#fff;}
+.wiz-rec-name{font-size:13px;font-weight:500;color:#fff;}
+.wiz-rec-desc{font-size:11px;color:var(--hero-accent);margin-top:1px;}
+.wiz-rec-btn{font-size:11px;color:#fff;cursor:pointer;padding:4px 11px;border:0.5px solid rgba(255,255,255,.3);border-radius:20px;white-space:nowrap;transition:all .15s;flex-shrink:0;margin-right:8px;}
+.wiz-rec-btn:hover{background:var(--terra);border-color:var(--terra);}
 
 .home-section{margin-bottom:24px;}
 .hs-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-light);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
 .fav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.fav-card{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;}
+.fav-card:hover{border-color:var(--terra);transform:translateY(-1px);}
+.fav-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:16px;}
+.fav-icon.general{background:var(--cat-general-icon);color:var(--cat-general-text);}
+.fav-icon.gis{background:var(--cat-gis-icon);color:var(--cat-gis-text);}
+.fav-icon.cat3d{background:var(--cat-3d-icon);color:var(--cat-3d-text);}
+.fav-icon.cat2d{background:var(--cat-2d-icon);color:var(--cat-2d-text);}
+.fav-icon.workflows{background:var(--cat-workflows-icon);color:var(--cat-workflows-text);}
+.fav-icon.interior{background:var(--cat-interior-icon);color:var(--cat-interior-text);}
+.fav-icon.base{background:var(--cat-base-icon);color:var(--cat-base-text);}
+.fav-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.fav-desc{font-size:11px;color:var(--ink-muted);line-height:1.4;flex:1;}
+.fav-meta{font-size:10px;color:var(--ink-muted);margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);}
+
+/* קטגוריה בסיס */
+.cat-base-card{background:var(--cat-base);border-radius:12px;padding:14px;cursor:pointer;}
+.cat-base-card .fav-icon{background:var(--cat-base-icon);color:var(--cat-base-text);}
 .fav-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;background:var(--bg);transition:all .15s;}
 .fav-card:hover{border-color:var(--terra);background:var(--terra-pale);}
 .fav-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px;}
@@ -615,24 +646,26 @@ body{font-family:'Assistant',sans-serif;background:var(--bg);color:var(--ink);di
     <div class="panel active" id="panel-home">
       <div class="eyebrow">ספר כלים · מליס אדריכלות</div>
       <div class="terra-line"></div>
-      <div class="home-greeting">שלום, <strong>מה תרצו לעשות היום?</strong></div>
+      <div class="home-greeting">שלום, <strong>מה תרצו ליצור היום?</strong></div>
       <div class="wizard-card">
-        <div class="wiz-sub">ענו על שתי שאלות — אכוון אתכם לכלי הנכון</div>
-        <div class="wiz-q-label">מה התוצר הרצוי?</div>
+        <div class="wiz-title">סייען כלים</div>
+        <div class="wiz-sub">בחרו יעד וקלט — אכוון אתכם לכלי הנכון</div>
+        <div class="wiz-q-label">מה תרצו ליצור?</div>
         <div class="wiz-opts" id="wq1">
-          <div class="wiz-opt" onclick="wizSel(1,'render',this)">הדמיה</div>
+          <div class="wiz-opt" onclick="wizSel(1,'render',this)">הדמיה אדריכלית</div>
           <div class="wiz-opt" onclick="wizSel(1,'model3d',this)">מודל תלת-מימד</div>
           <div class="wiz-opt" onclick="wizSel(1,'detail',this)">חילוץ פרט</div>
           <div class="wiz-opt" onclick="wizSel(1,'interior',this)">עיצוב פנים</div>
           <div class="wiz-opt" onclick="wizSel(1,'script',this)">קוד / סקריפט</div>
+          <div class="wiz-opt" onclick="wizSel(1,'analysis',this)">ניתוח מרחבי</div>
         </div>
         <div class="wiz-q2-wrap" id="wq2-wrap">
-          <div class="wiz-q-label">איזה קלט יש לך?</div>
+          <div class="wiz-q-label">מה יש לכם?</div>
           <div class="wiz-opts" id="wq2">
             <div class="wiz-opt" onclick="wizSel(2,'photo',this)">תמונה / צילום</div>
             <div class="wiz-opt" onclick="wizSel(2,'sketch',this)">סקיצה</div>
             <div class="wiz-opt" onclick="wizSel(2,'plan',this)">תכנית דו-מימדית</div>
-            <div class="wiz-opt" onclick="wizSel(2,'model',this)">מודל תלת-מימד</div>
+            <div class="wiz-opt" onclick="wizSel(2,'model',this)">מודל קיים</div>
             <div class="wiz-opt" onclick="wizSel(2,'text',this)">תיאור טקסטואלי</div>
           </div>
         </div>
@@ -673,15 +706,24 @@ body{font-family:'Assistant',sans-serif;background:var(--bg);color:var(--ink);di
 // ════════════════════════════════════════════
 
 const CATS = [
-  {id:'general',   label:'רב-תכליתי',                  color:'var(--terra)'},
-  {id:'gis',       label:'GIS — מערכות מידע גיאוגרפי',   color:'var(--slate)'},
-  {id:'3d',        label:'תלת-מימד',                   color:'var(--slate)'},
-  {id:'2d',        label:'דו-מימד / הדמיה',             color:'var(--sage)'},
-  {id:'workflows', label:'Visual Scripting / Workflows', color:'var(--purple)'},
-  {id:'interior',  label:'עיצוב פנים',                  color:'var(--sand)'},
+  {id:'base',      label:'מיומנויות בסיס',               color:'var(--cat-base-text)',      icon:'ti-school',       bg:'var(--cat-base)'},
+  {id:'general',   label:'רב-תכליתי',                   color:'var(--cat-general-text)',   icon:'ti-message-circle', bg:'var(--cat-general)'},
+  {id:'gis',       label:'GIS — מערכות מידע גיאוגרפי',  color:'var(--cat-gis-text)',       icon:'ti-map-2',         bg:'var(--cat-gis)'},
+  {id:'3d',        label:'תלת-מימד',                    color:'var(--cat-3d-text)',        icon:'ti-cube',          bg:'var(--cat-3d)'},
+  {id:'2d',        label:'דו-מימד / הדמיה',              color:'var(--cat-2d-text)',        icon:'ti-photo',         bg:'var(--cat-2d)'},
+  {id:'workflows', label:'Visual Scripting / Workflows', color:'var(--cat-workflows-text)', icon:'ti-circuit-cell',  bg:'var(--cat-workflows)'},
+  {id:'interior',  label:'עיצוב פנים',                   color:'var(--cat-interior-text)',  icon:'ti-armchair',      bg:'var(--cat-interior)'},
 ];
 
 const TOOLS = [
+  {id:'prompts', name:'כתיבת פרומפטים', cat:'base', starred:true, price:'חינם', pc:'pf', parent:null,
+   desc:'עקרונות כתיבת פרומפטים יעילים לאדריכלים. מבוסס קורס אנטרופיק וניסיון מעשי מהשטח.',
+   strengths:['מיומנות בסיסית לכל הכלים','חוסך זמן בכל שיחה','ניתן ליישם מיד'],
+   weaknesses:[],
+   guides:[
+     {id:'prompts-basics', label:'עקרונות בסיסיים', cat:'בסיס', soon:true},
+     {id:'prompts-arch',   label:'פרומפטים לאדריכלות', cat:'מתקדם', soon:true},
+   ]},
   {id:'claude', name:'Claude', cat:'general', starred:true, price:'Pro ~$20/חודש', pc:'pp', parent:null,
    desc:'מודל שפה של Anthropic. כתיבת קוד Python לRhino, Polysurfaces, ניתוח מסמכים ומצגות. גמיש ודינמי לשיח עיצובי. תומך בפרויקטים, Skills, וMemory לבניית יועצים מקצועיים.',
    strengths:['עריכה דינמית בשיח','Polysurfaces לריינו','בניית יועצים מקצועיים עם Projects','Skills ו-Memory לאורך זמן'],
@@ -2111,14 +2153,19 @@ function buildSidebar() {
 // ── BUILD HOME ──
 function buildHome() {
   var fg = document.getElementById('fav-grid');
-  var starred = TOOLS.filter(function(t){return t.starred;}).slice(0,6);
+  var starred = TOOLS.filter(function(t){return t.starred && !t.parent;}).slice(0,6);
   fg.innerHTML = starred.map(function(t) {
-    var cc = catColor(t.cat);
-    var cat = CATS.find(function(c){return c.id===t.cat;});
-    return '<div class="fav-card" onclick="goTool(\'' + t.id + '\')">'
+    var cat = CATS.find(function(c){return c.id===t.cat;}) || {};
+    var bg = cat.bg || 'var(--terra-pale)';
+    var iconBg = 'var(--cat-' + t.cat + '-icon)';
+    var iconColor = 'var(--cat-' + t.cat + '-text)';
+    var icon = cat.icon || 'ti-tool';
+    return '<div class="fav-card" style="background:' + bg + ';border:none;" onclick="goTool(\'' + t.id + '\')">'
+      + '<div class="fav-icon" style="background:' + iconBg + ';color:' + iconColor + '">'
+      + '<i class="ti ' + icon + '" aria-hidden="true"></i></div>'
       + '<div class="fav-name">' + t.name + '</div>'
-      + '<div class="fav-desc">' + t.desc.substring(0,60) + (t.desc.length>60?'…':'') + '</div>'
-      + '<span class="fav-cat" style="background:' + cc + '22;color:' + cc + ';border:1px solid ' + cc + '44">' + (cat?cat.label:'') + '</span>'
+      + '<div class="fav-desc">' + t.desc.substring(0,55) + (t.desc.length>55?'…':'') + '</div>'
+      + '<div class="fav-meta">' + (cat.label||'') + '</div>'
       + '</div>';
   }).join('');
 
